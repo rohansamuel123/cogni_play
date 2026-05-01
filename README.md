@@ -1,4 +1,4 @@
-# 🧠 CogniPlay
+# 🧠 IntelliSight
 
 ### AI-Powered Cognitive Development Platform for Early Learners
 
@@ -6,9 +6,9 @@
 
 ## 🚀 Overview
 
-CogniPlay is a gamified mobile application designed to assess and improve cognitive skills in young children through interactive tasks and AI-driven insights.
+IntelliSight is a gamified mobile application designed to assess and improve cognitive skills in young children through interactive tasks and AI-driven insights.
 
-Instead of relying solely on traditional IQ tests, CogniPlay evaluates children based on real-time performance in engaging games, providing a more holistic understanding of their learning abilities.
+Instead of relying solely on traditional IQ tests, IntelliSight evaluates children based on real-time performance in engaging games, providing a more holistic understanding of their learning abilities.
 
 ---
 
@@ -30,7 +30,7 @@ This can lead to:
 
 ## 💡 Solution
 
-CogniPlay provides:
+IntelliSight provides:
 
 * 🎮 Gamified cognitive assessments
 * 📊 Skill-based evaluation (memory, attention, logic, comprehension)
@@ -109,8 +109,8 @@ Welcome → Profile Setup → Game Selection → Game → Result → Dashboard �
 ### 1. Clone Repository
 
 ```
-git clone https://github.com/your-repo/cogniplay.git
-cd cogniplay
+git clone https://github.com/your-repo/IntelliSight.git
+cd IntelliSight
 ```
 
 ---
