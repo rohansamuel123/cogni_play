@@ -16,15 +16,15 @@ Instead of relying solely on traditional IQ tests, IntelliSight evaluates childr
 
 Early childhood assessments are often:
 
-* Rigid and standardized
-* Not adaptive to individual learning pace
-* Focused on IQ rather than real cognitive skills
+- Rigid and standardized
+- Not adaptive to individual learning pace
+- Focused on IQ rather than real cognitive skills
 
 This leads to:
 
-* Misjudgment of a child’s abilities
-* Increased stress for children and parents
-* Early and inaccurate labeling
+- Misjudgment of a child’s abilities
+- Increased stress for children and parents
+- Early and inaccurate labeling
 
 ---
 
@@ -32,20 +32,20 @@ This leads to:
 
 IntelliSight provides:
 
-* 🎮 Gamified cognitive assessments
-* 📊 Skill-based evaluation (memory, attention, logic, comprehension)
-* 🤖 AI-generated reports using OpenClaw
-* 📈 Continuous progress tracking
+- 🎮 Gamified cognitive assessments
+- 📊 Skill-based evaluation (memory, attention, logic, comprehension)
+- 🤖 AI-generated reports using OpenClaw
+- 📈 Continuous progress tracking
 
 ---
 
 ## 🧩 Key Features
 
-* 🕹️ Interactive games for cognitive evaluation
-* 📊 Real-time performance tracking
-* 🤖 AI-powered cognitive reports
-* 📈 Skill-wise progress dashboard
-* 👨‍👩‍👧 Parent-friendly insights
+- 🕹️ Interactive games for cognitive evaluation
+- 📊 Real-time performance tracking
+- 🤖 AI-powered cognitive reports
+- 📈 Skill-wise progress dashboard
+- 👨‍👩‍👧 Parent-friendly insights
 
 ---
 
@@ -88,11 +88,11 @@ AI Reports → App
 
 ## 🗄️ Database Design
 
-* **Users** – child profiles
-* **Games** – cognitive tasks
-* **Game Sessions** – gameplay data
-* **Cognitive Scores** – processed skill metrics
-* **Reports** – AI-generated insights
+- **Users** – child profiles
+- **Games** – cognitive tasks
+- **Game Sessions** – gameplay data
+- **Cognitive Scores** – processed skill metrics
+- **Reports** – AI-generated insights
 
 ---
 
@@ -124,7 +124,7 @@ venv\Scripts\activate   # Windows
 # source venv/bin/activate  (Mac/Linux)
 
 pip install -r requirements.txt
-uvicorn main:app --reload
+uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
 ---
@@ -141,10 +141,10 @@ npx expo start
 
 ## 🔮 Future Enhancements
 
-* 🎯 Adaptive difficulty using AI
-* 🧠 Personalized learning paths
-* 🏫 School integration dashboard
-* ☁️ Cloud deployment
+- 🎯 Adaptive difficulty using AI
+- 🧠 Personalized learning paths
+- 🏫 School integration dashboard
+- ☁️ Cloud deployment
 
 ---
 
@@ -156,8 +156,8 @@ This project is developed as part of a hackathon to provide a more inclusive and
 
 ## ⭐ Acknowledgements
 
-* OpenClaw AI
-* FastAPI
-* React Native
+- OpenClaw AI
+- FastAPI
+- React Native
 
 ---
