@@ -39,16 +39,19 @@ We measure:
 
 ### Frontend
 
-- React Native (Expo)
-- Expo Router (file-based routing)
-- Axios for API calls
+- **Framework:** React Native (Expo)
+- **Routing:** Expo Router (file-based routing)
+- **State/Storage:** `@react-native-async-storage/async-storage` for local sessions and profiles
+- **API Client:** Axios for API calls
+- **Styling:** React Native StyleSheet, gamified UI theme (warm creams, vibrant orange, 3D pill shapes)
 
 ### Backend
 
-- FastAPI
-- Python
+- **Framework:** FastAPI
+- **Language:** Python
+- **ORM:** SQLAlchemy
 
-### Database (Planned)
+### Database (Planned/Initial Setup)
 
 - PostgreSQL
 
@@ -64,70 +67,94 @@ We measure:
 
 ```bash
 intellisight/
-├── frontend/
-├── backend/
-├── docs/
+├── frontend/    # React Native Expo app
+├── backend/     # FastAPI Python server
+├── docs/        # Project documentation and context
 ```
 
 ---
 
 ### Frontend Structure (Expo Router)
 
+The frontend is built using a file-based routing system where each file in `app/` is a screen.
+
 ```bash
 frontend/
 ├── app/
-│   ├── index.tsx           # Home screen
-│   ├── profile.tsx         # User setup
-│   ├── game.tsx            # Game screen
-│   ├── dashboard.tsx       # Progress view
-│   ├── report.tsx          # AI report
-│
-├── services/
-│   └── api.js              # Axios config
+│   ├── _layout.tsx         # Root layout configuration (controls header visibility)
+│   ├── index.tsx           # Home/Login screen (Quick Access & Manual Login)
+│   ├── profile.tsx         # Parent account creation
+│   ├── dashboard.tsx       # Landing page after successful login
+│   ├── game.tsx            # (Planned) Game screen
+│   ├── report.tsx          # (Planned) AI report
 │
 ├── components/             # Reusable UI
+│   └── Button.tsx          # Custom 3D gamified button component
+│
+├── assets/                 # Images, fonts, etc.
+│   └── mascot.png          # Mascot image
+│
+├── services/               # API connection logic
+│   └── api.js              # Axios config
+│
 ├── hooks/                  # Custom logic
 ├── constants/              # Config values
 ```
 
+#### 🧩 Frontend File Responsibilities:
+- **`app/index.tsx`**: The main entry point. It checks for a persistent login session on mount. If logged in, redirects to `/dashboard`. If not, it reads saved profiles from `AsyncStorage` and displays large "Quick Login" avatars. It also handles manual email/password login.
+- **`app/profile.tsx`**: Allows users to create a parent account (Name, Email, Password). Upon creation, the account is stored locally via `AsyncStorage` inside an `accounts` array, and the user is instantly logged in (saving to `currentUser` key) and routed to `/dashboard`.
+- **`app/dashboard.tsx`**: The landing screen for parents. It reads the `currentUser` from `AsyncStorage` to display a personalized greeting. Includes a "Logout" mechanism that clears the session and routes back to `/`.
+- **`components/Button.tsx`**: A reusable, highly stylized React Native `<Pressable>` component that gives buttons a tactile, 3D pill-shaped feel suitable for a gamified, child-friendly app.
+
 ---
 
-### Backend Structure (Planned)
+### Backend Structure
 
 ```bash
 backend/
 ├── app/
-│   ├── main.py
+│   ├── main.py             # Entry point (FastAPI server)
 │   ├── routes/
 │   │   ├── user.py
 │   │   ├── game.py
 │   │   ├── session.py
 │   │   ├── report.py
 │   │
-│   ├── models/
-│   ├── schemas/
+│   ├── models/             # SQLAlchemy ORM Models
+│   │   ├── user.py
+│   │   ├── game.py
+│   │   ├── session.py
+│   │   ├── report.py
+│   │   ├── score.py
+│   │
+│   ├── schemas/            # Pydantic validation models
 │   ├── services/
 │   │   ├── scoring_service.py
 │   │   ├── ai_service.py
 │   │
 │   ├── db/
-│   │   └── database.py
+│   │   └── database.py     # Database connection setup
 ```
 
 ---
 
 ## 🔄 System Flow (End-to-End)
 
-### 1. User Interaction
+### 1. Account & Session Flow
+- **App Launch:** `index.tsx` checks `AsyncStorage` for `currentUser`. 
+- **If authenticated:** Immediately route to `dashboard.tsx`.
+- **If unauthenticated:**
+  - Display "Quick Access" profiles (loaded from `accounts` array in `AsyncStorage`).
+  - User taps Quick Access -> logs in instantly.
+  - OR User logs in manually with Email/Password.
+  - OR User taps "Create Profile" -> navigates to `profile.tsx` -> saves new account to `AsyncStorage` -> logs in.
 
+### 2. Gameplay Interaction (Planned)
 - Child plays game in mobile app
 
----
-
-### 2. Data Capture
-
+### 3. Data Capture (Planned)
 Frontend sends:
-
 ```json
 {
   "user_id": "uuid",
@@ -138,45 +165,26 @@ Frontend sends:
 }
 ```
 
----
-
-### 3. Backend Processing
-
+### 4. Backend Processing
 - Store raw session in DB
 - Compute basic metrics
 
----
-
-### 4. Cognitive Scoring
-
+### 5. Cognitive Scoring
 Derived metrics:
-
 - memory_score
 - attention_score
 - logic_score
 - comprehension_score
 - processing_speed
 
----
-
-### 5. AI Processing (OpenClaw)
-
+### 6. AI Processing (OpenClaw)
 Input:
-
 - aggregated scores
 - gameplay history
-
 Output:
+- strengths, weaknesses, recommendations, readiness level
 
-- strengths
-- weaknesses
-- recommendations
-- readiness level
-
----
-
-### 6. Output
-
+### 7. Output
 - Dashboard updated
 - Report displayed
 
@@ -185,40 +193,30 @@ Output:
 ## 🗄️ Database Schema (Final Plan)
 
 ### USERS
-
 - id (PK)
 - name
 - age
 - email
 - created_at
 
----
-
 ### GAMES
-
 - id (PK)
 - name
 - type (memory, logic, attention)
 - difficulty_level
 - description
 
----
-
 ### GAME_SESSIONS
-
 - id (PK)
 - user_id (FK)
 - game_id (FK)
 - score
 - accuracy
-- time_taken
+- time_taken (integer seconds)
 - actions (JSONB)
 - played_at
 
----
-
 ### COGNITIVE_SCORES
-
 - id (PK)
 - user_id (FK)
 - memory_score
@@ -228,10 +226,7 @@ Output:
 - processing_speed_score
 - updated_at
 
----
-
 ### REPORTS
-
 - id (PK)
 - user_id (FK)
 - summary
@@ -246,26 +241,16 @@ Output:
 ## 🔌 API Design (Planned)
 
 ### User
-
 - POST /users → create user
 - GET /users → list users
 
----
-
 ### Game
-
 - GET /games → fetch available games
 
----
-
 ### Session
-
 - POST /session → submit gameplay
 
----
-
 ### Report
-
 - GET /report/{user_id} → fetch AI report
 
 ---
@@ -281,23 +266,26 @@ Output:
 - Backend initialized
 - Basic FastAPI running
 - Frontend initialized (Expo Router)
-- Frontend ↔ Backend connection working
-- CORS configured
-
----
+- **Database models fully implemented with SQLAlchemy ORM**
+- **All model relationships fixed and validated**
+- **Backend environment configuration (load_dotenv)**
+- **PostgreSQL driver (psycopg2) installed and configured**
+- **Frontend local session management (AsyncStorage) implemented**
+- **Frontend profile creation flow built**
+- **Frontend 'Quick Access' authentication built**
+- **Frontend global gamified UI established (creams, warm oranges, 3D buttons)**
 
 ### 🚧 In Progress
 
 - API structuring
 - First real endpoints
-
----
+- Connecting frontend local accounts with backend Postgres accounts
 
 ### ❌ Not Started
 
-- Database integration
 - Game logic
 - AI integration
+- Backend score computation algorithms
 
 ---
 
@@ -305,11 +293,9 @@ Output:
 
 - Use Expo Tunnel OR same WiFi
 - Backend must run with:
-
   ```bash
   uvicorn main:app --host 0.0.0.0 --port 8000
   ```
-
 - API baseURL:
   - localhost for web
   - IPv4 for mobile
@@ -319,23 +305,15 @@ Output:
 ## 🧠 AI Integration Plan
 
 ### Role of AI
-
 - NOT real-time gameplay
 - ONLY post-analysis
 
----
-
 ### Input to AI
-
 - Cognitive scores
 - Session history
 
----
-
 ### Output
-
 Structured JSON:
-
 ```json
 {
   "strengths": "...",
@@ -350,13 +328,11 @@ Structured JSON:
 ## 🧩 Game Design Approach
 
 Games should:
-
 - Be simple and visual
 - Require minimal reading
 - Capture interaction patterns
 
 Examples:
-
 - Memory sequence
 - Pattern matching
 - Follow instructions
@@ -365,67 +341,22 @@ Examples:
 
 ## 🎯 Design Constraints
 
-- UI must be child-friendly
+- UI must be child-friendly (warm colors, playful 3D buttons, large touch targets)
 - Backend must remain simple
 - AI should enhance, not complicate
 - Avoid over-engineering
 
 ---
 
-## 🚀 Roadmap
-
-### Phase 1 (Now)
-
-- Basic APIs
-- UI skeleton
-- Data flow working
-
----
-
-### Phase 2
-
-- Database integration
-- Scoring logic
-
----
-
-### Phase 3
-
-- AI integration
-- Report generation
-
----
-
-### Phase 4
-
-- UI polish
-- Demo readiness
-
----
-
-## 🧠 Key Philosophy
-
-- Focus on **behavior over scores**
-- Keep system **modular**
-- Build **incrementally**
-- Prioritize **clarity over complexity**
-
----
-
 ## 🧾 Usage for AI Tools
 
 This file contains:
-
 - Full architecture
 - Data flow
-- API plan
-- Folder structure
+- File responsibilities
+- Database schemas
 
-👉 Can be directly used as context for:
-
-- Code generation tools
-- AI agents
-- Team onboarding
+👉 **To any AI Assistant:** Read this entire document before generating code or making architectural decisions. It is the definitive source of truth for the IntelliSight project.
 
 ---
 
@@ -441,7 +372,4 @@ This file contains:
 ## 🚀 Final Vision
 
 Create a platform where:
-
 > “Every child is understood based on how they think, not judged by a single number.”
-
----
