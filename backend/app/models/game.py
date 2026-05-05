@@ -13,4 +13,4 @@ class Game(Base):
     game_difficulty = Column(Integer, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    users = relationship("User", back_populates="games")
+    game_sessions = relationship("Session", back_populates="game")

@@ -8,6 +8,7 @@ class Report(Base):
 
     report_id=Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.user_id"))
+    session_id = Column(Integer, ForeignKey("game_sessions.session_id"))
     strengths=Column(JSON)
     weaknesses=Column(JSON)
     recommendations=Column(JSON)
@@ -15,5 +16,6 @@ class Report(Base):
     summary=Column(String)
     created_at=Column(DateTime(timezone=True), server_default=func.now())
 
-    users = relationship("users", back_populates="reports")
+    user = relationship("users", back_populates="reports")
+    session = relationship("Session", back_populates="reports")
 

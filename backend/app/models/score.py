@@ -15,5 +15,5 @@ class CognitiveScore(Base):
     comprehension_score=Column(Integer,nullable=False)
     processing_speed_score=Column(Float, nullable=False)
 
-    users = relationship("User", back_populates="cognitive_scores")
+    users = relationship("User", back_populates="cognitive_score")
 
