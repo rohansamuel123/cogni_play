@@ -8,6 +8,7 @@ from app.models import Base
 from app.routes import user
 from app.routes import game
 from app.routes import score
+from app.routes import session
 
 Base.metadata.create_all(bind=engine)
 
@@ -24,6 +25,7 @@ app.add_middleware(
 app.include_router(user.router)
 app.include_router(game.router)
 app.include_router(score.router)
+app.include_router(session.router)
 
 @app.get("/")
 def home():
