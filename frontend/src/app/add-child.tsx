@@ -61,6 +61,108 @@ export default function AddChild() {
     }
   };
 
+
+  const content = (
+    <ScrollView contentContainerStyle={styles.scrollContent} bounces={false}>
+
+      {/* Avatar Picker */}
+      <View style={styles.card}>
+        <Text style={styles.label}>Choose an Avatar</Text>
+        <View style={styles.avatarGrid}>
+          {AVATARS.map((emoji) => (
+            <Pressable
+              key={emoji}
+              style={[
+                styles.avatarOption,
+                avatar === emoji && styles.avatarSelected,
+              ]}
+              onPress={() => setAvatar(emoji)}
+            >
+              <Text style={styles.avatarEmoji}>{emoji}</Text>
+            </Pressable>
+          ))}
+        </View>
+
+        {/* Selected Preview */}
+        <View style={styles.previewRow}>
+          <View style={styles.previewAvatar}>
+            <Text style={styles.previewEmoji}>{avatar}</Text>
+          </View>
+          <Text style={styles.previewName}>{name || "Child's Name"}</Text>
+        </View>
+      </View>
+
+      {/* Name */}
+      <View style={styles.card}>
+        <Text style={styles.label}>Child's Name</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter name"
+          placeholderTextColor="#9CA3AF"
+          value={name}
+          onChangeText={setName}
+        />
+      </View>
+
+      {/* Age */}
+      <View style={styles.card}>
+        <Text style={styles.label}>Age</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter age"
+          placeholderTextColor="#9CA3AF"
+          keyboardType="number-pad"
+          value={age}
+          onChangeText={setAge}
+          maxLength={2}
+        />
+      </View>
+
+      {/* Gender */}
+      <View style={styles.card}>
+        <Text style={styles.label}>Gender</Text>
+        <View style={styles.genderRow}>
+          {GENDERS.map((g) => (
+            <Pressable
+              key={g}
+              style={[
+                styles.genderOption,
+                gender === g && styles.genderSelected,
+              ]}
+              onPress={() => setGender(g)}
+            >
+              <Text
+                style={[
+                  styles.genderText,
+                  gender === g && styles.genderTextSelected,
+                ]}
+              >
+                {g}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+      </View>
+
+      {/* Submit */}
+      <View style={styles.actionContainer}>
+        <Button
+          title={loading ? 'Creating...' : 'Create Profile'}
+          onPress={handleCreate}
+          disabled={loading}
+        />
+        <View style={{ height: 12 }} />
+        <Button
+          title="Cancel"
+          variant="outline"
+          onPress={() => router.back()}
+        />
+      </View>
+
+      <View style={{ height: 40 }} />
+    </ScrollView>
+  );
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header title="Add Child" subtitle="Create a child profile" />
@@ -68,106 +170,11 @@ export default function AddChild() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView contentContainerStyle={styles.scrollContent} bounces={false}>
-
-            {/* Avatar Picker */}
-            <View style={styles.card}>
-              <Text style={styles.label}>Choose an Avatar</Text>
-              <View style={styles.avatarGrid}>
-                {AVATARS.map((emoji) => (
-                  <Pressable
-                    key={emoji}
-                    style={[
-                      styles.avatarOption,
-                      avatar === emoji && styles.avatarSelected,
-                    ]}
-                    onPress={() => setAvatar(emoji)}
-                  >
-                    <Text style={styles.avatarEmoji}>{emoji}</Text>
-                  </Pressable>
-                ))}
-              </View>
-
-              {/* Selected Preview */}
-              <View style={styles.previewRow}>
-                <View style={styles.previewAvatar}>
-                  <Text style={styles.previewEmoji}>{avatar}</Text>
-                </View>
-                <Text style={styles.previewName}>{name || "Child's Name"}</Text>
-              </View>
-            </View>
-
-            {/* Name */}
-            <View style={styles.card}>
-              <Text style={styles.label}>Child's Name</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter name"
-                placeholderTextColor="#9CA3AF"
-                value={name}
-                onChangeText={setName}
-              />
-            </View>
-
-            {/* Age */}
-            <View style={styles.card}>
-              <Text style={styles.label}>Age</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter age"
-                placeholderTextColor="#9CA3AF"
-                keyboardType="number-pad"
-                value={age}
-                onChangeText={setAge}
-                maxLength={2}
-              />
-            </View>
-
-            {/* Gender */}
-            <View style={styles.card}>
-              <Text style={styles.label}>Gender</Text>
-              <View style={styles.genderRow}>
-                {GENDERS.map((g) => (
-                  <Pressable
-                    key={g}
-                    style={[
-                      styles.genderOption,
-                      gender === g && styles.genderSelected,
-                    ]}
-                    onPress={() => setGender(g)}
-                  >
-                    <Text
-                      style={[
-                        styles.genderText,
-                        gender === g && styles.genderTextSelected,
-                      ]}
-                    >
-                      {g}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
-            </View>
-
-            {/* Submit */}
-            <View style={styles.actionContainer}>
-              <Button
-                title={loading ? 'Creating...' : 'Create Profile'}
-                onPress={handleCreate}
-                disabled={loading}
-              />
-              <View style={{ height: 12 }} />
-              <Button
-                title="Cancel"
-                variant="outline"
-                onPress={() => router.back()}
-              />
-            </View>
-
-            <View style={{ height: 40 }} />
-          </ScrollView>
-        </TouchableWithoutFeedback>
+        {Platform.OS === 'web' ? content : (
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            {content}
+          </TouchableWithoutFeedback>
+        )}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

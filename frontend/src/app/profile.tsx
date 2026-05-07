@@ -54,69 +54,77 @@ export default function Profile() {
     }
   };
 
+
+  const content = (
+    <View style={styles.inner}>
+      <Text style={styles.title}>Create Profile</Text>
+      <Text style={styles.subtitle}>Set up a parent account to get started.</Text>
+
+      <View style={styles.formContainer}>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Parent Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Jane Doe"
+            placeholderTextColor="#9CA3AF"
+            value={name}
+            onChangeText={setName}
+          />
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Email Address</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="parent@example.com"
+            placeholderTextColor="#9CA3AF"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="••••••••"
+            placeholderTextColor="#9CA3AF"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+        </View>
+      </View>
+
+      <View style={styles.actionContainer}>
+        <Button title="Create Profile" onPress={handleCreateProfile} />
+        <View style={{ height: 16 }} />
+        <Button 
+          title="Go Back" 
+          variant="outline" 
+          onPress={() => router.back()} 
+        />
+      </View>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.inner}>
-            <Text style={styles.title}>Create Profile</Text>
-            <Text style={styles.subtitle}>Set up a parent account to get started.</Text>
-
-            <View style={styles.formContainer}>
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Parent Name</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Jane Doe"
-                  placeholderTextColor="#9CA3AF"
-                  value={name}
-                  onChangeText={setName}
-                />
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Email Address</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="parent@example.com"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  value={email}
-                  onChangeText={setEmail}
-                />
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Password</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="••••••••"
-                  placeholderTextColor="#9CA3AF"
-                  secureTextEntry
-                  value={password}
-                  onChangeText={setPassword}
-                />
-              </View>
-            </View>
-
-            <View style={styles.actionContainer}>
-              <Button title="Create Profile" onPress={handleCreateProfile} />
-              <View style={{ height: 16 }} />
-              <Button 
-                title="Go Back" 
-                variant="outline" 
-                onPress={() => router.back()} 
-              />
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
+        {Platform.OS === 'web' ? content : (
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            {content}
+          </TouchableWithoutFeedback>
+        )}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
+
 }
 
 const styles = StyleSheet.create({
