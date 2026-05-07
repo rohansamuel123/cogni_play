@@ -67,11 +67,24 @@ def login(credentials: LoginRequest, db: Session = Depends(get_db)):
 @router.post("/google", response_model=TokenResponse)
 def google_auth(auth_req: GoogleAuthRequest, db: Session = Depends(get_db)):
     """Authenticate via Google id_token. Returns a JWT on success."""
+    import os
+    import traceback
+
+    GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+
     try:
         # Verify the token with Google
+        # audience=GOOGLE_CLIENT_ID ensures the token was issued for our app
         idinfo = id_token.verify_oauth2_token(
-            auth_req.id_token, google_requests.Request(), audience=None
+            auth_req.id_token,
+            google_requests.Request(),
+            audience=GOOGLE_CLIENT_ID,
+            clock_skew_in_seconds=10,  # tolerate slight clock drift
         )
+
+        # Verify the issuer
+        if idinfo["iss"] not in ["accounts.google.com", "https://accounts.google.com"]:
+            raise ValueError("Invalid issuer")
 
         email = idinfo.get("email")
         name = idinfo.get("name", "Google User")
@@ -99,10 +112,12 @@ def google_auth(auth_req: GoogleAuthRequest, db: Session = Depends(get_db)):
         token = create_access_token(data={"sub": str(user.user_id)})
         return TokenResponse(access_token=token, user=user)
 
-    except ValueError:
+    except ValueError as e:
+        print(f"[Google Auth] Token verification FAILED: {e}")
+        traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid Google token.",
+            detail=f"Invalid Google token: {str(e)}",
         )
 
 
