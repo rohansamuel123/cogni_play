@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView, Pressable } from 'rea
 import { useRouter, useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GAMES, DOMAIN_LABELS, DOMAIN_COLORS, CognitiveDomain } from '../data/gameRegistry';
-import { getCognitiveProfile, getUnlockedGameCount, getBestSession, CognitiveProfile } from '../utils/scoring';
+import { getCognitiveProfile, getBestSession, CognitiveProfile } from '../utils/scoring';
 import GameCard from '../components/GameCard';
 import ScoreRing from '../components/ScoreRing';
 import Button from '../components/Button';
@@ -12,7 +12,7 @@ export default function Dashboard() {
   const router = useRouter();
   const [userName, setUserName] = useState('');
   const [profile, setProfile] = useState<CognitiveProfile | null>(null);
-  const [unlockedCount, setUnlockedCount] = useState(1);
+
   const [gameStars, setGameStars] = useState<Record<string, number>>({});
 
   const loadData = async () => {
@@ -27,9 +27,7 @@ export default function Dashboard() {
     const p = await getCognitiveProfile();
     setProfile(p);
 
-    // Load unlocked count
-    const count = await getUnlockedGameCount();
-    setUnlockedCount(count);
+
 
     // Load best stars per game
     const stars: Record<string, number> = {};
@@ -90,8 +88,8 @@ export default function Dashboard() {
               <Text style={styles.statLabel}>Stars ★</Text>
             </View>
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>{unlockedCount}/{GAMES.length}</Text>
-              <Text style={styles.statLabel}>Unlocked</Text>
+              <Text style={styles.statValue}>{GAMES.length}</Text>
+              <Text style={styles.statLabel}>Total</Text>
             </View>
           </View>
         </View>
@@ -128,17 +126,16 @@ export default function Dashboard() {
         <View style={styles.journeySection}>
           <Text style={styles.sectionTitle}>🗺️ Your Journey</Text>
           <Text style={styles.sectionSubtitle}>
-            Complete games to unlock the next challenge!
+            Pick any game and start playing!
           </Text>
 
           {GAMES.map((game, index) => {
-            const locked = game.order > unlockedCount;
             const stars = gameStars[game.id] || 0;
             return (
               <View key={game.id}>
                 {index > 0 && (
                   <View style={styles.connector}>
-                    <View style={[styles.connectorLine, locked && styles.connectorLocked]} />
+                    <View style={styles.connectorLine} />
                   </View>
                 )}
                 <GameCard
@@ -148,7 +145,7 @@ export default function Dashboard() {
                   domainLabel={DOMAIN_LABELS[game.domain]}
                   domainColor={game.color}
                   stars={stars}
-                  locked={locked}
+                  locked={false}
                   onPress={() => handleGamePress(game.route)}
                 />
               </View>
@@ -297,7 +294,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF7A00',
     borderRadius: 2,
   },
-  connectorLocked: {
-    backgroundColor: '#E0D5C8',
-  },
+
 });
