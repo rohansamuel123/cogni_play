@@ -78,11 +78,11 @@ The platform is designed around a **Parent -> Child -> Gameplay** hierarchy.
   - The session is asynchronously `POST`ed to `/sessions/child/{child_id}` to persist in the PostgreSQL database.
 - **Result:** The child sees the `game-results` screen with their stars, and returning to the Dashboard reflects their new scores.
 
-### 4. AI Processing & Reporting (Planned)
-- Periodically, or upon parent request, the backend aggregates all game sessions for a child.
-- This aggregated cognitive profile is fed into an LLM (OpenClaw).
-- The LLM outputs a structured JSON report (strengths, weaknesses, recommendations).
-- The parent views this generated report on the `/cognitive-profile` screen.
+### 4. AI Processing & Reporting (✅ Implemented)
+- The backend aggregates all game sessions and behavioral patterns (accuracy, speed, levels) for a child.
+- This data is fed into the **OpenClaw AI** orchestration layer.
+- The AI outputs a structured JSON report including strengths, weaknesses, parent recommendations, and an adaptive "Next Game" suggestion.
+- The parent views this generated report on the `/cognitive-profile` screen by clicking "Generate AI Insights".
 
 ---
 
@@ -99,14 +99,27 @@ The platform is designed around a **Parent -> Child -> Gameplay** hierarchy.
 - `name`, `age`, `gender`, `avatar`
 - `created_at`
 
-### GAME_SESSIONS
+### DOMAIN_SCORES (Normalized Standings)
+- Stores the **current best** score for each child per domain (Memory, Logic, etc.).
+- One row per domain = No empty columns.
+
+### COGNITIVE_HISTORY (Progress Tracker)
+- Stores a **timeline** of every score update.
+- Used to generate progress charts for parents.
+
+### GAME_SESSIONS (Raw Data)
 - `session_id` (PK)
-- `child_id` (FK to CHILDREN, ON DELETE CASCADE)
-- `user_id` (FK to USERS)
-- `game_key` (String, e.g., "color-recall")
-- `domain` (String, e.g., "memory")
-- `score`, `max_score`, `accuracy`, `time_taken`, `level`, `stars`
+- `child_id` (FK)
+- `game_key`, `domain`, `score`, `accuracy`, `time_taken`, `level`, `stars`
 - `played_at`
+
+### REPORTS (AI Insights)
+- `report_id` (PK)
+- `child_id` (FK)
+- `summary`, `strengths`, `weaknesses`, `recommendations`
+- `next_game`, `difficulty_adjustment`, `readiness_level`
+- `created_at`
+
 
 ---
 

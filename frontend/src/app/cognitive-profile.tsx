@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/Header';
 import CognitiveRadar from '../components/CognitiveRadar';
 import ScoreRing from '../components/ScoreRing';
+import API from '../services/api';
 import { CognitiveDomain, DOMAIN_LABELS, DOMAIN_COLORS, DOMAIN_EMOJI } from '../data/gameRegistry';
 import { getCognitiveProfile, getGameSessions, CognitiveProfile, GameSession } from '../utils/scoring';
 
@@ -13,6 +14,9 @@ export default function CognitiveProfileScreen() {
   const [profile, setProfile] = useState<CognitiveProfile | null>(null);
   const [sessions, setSessions] = useState<GameSession[]>([]);
   const [childName, setChildName] = useState('');
+
+  const [report, setReport] = useState<any>(null);
+  const [loadingAI, setLoadingAI] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -28,10 +32,34 @@ export default function CognitiveProfileScreen() {
         setProfile(p);
         const s = await getGameSessions(childId);
         setSessions(s.reverse()); // Most recent first
+
+        // Try to load the latest report if it exists
+        try {
+          const res = await API.get(`/reports/child/${childId}`);
+          if (res.data && res.data.length > 0) {
+            setReport(res.data[res.data.length - 1]);
+          }
+        } catch (e) {}
       };
       load();
     }, [])
   );
+
+  const handleGenerateAI = async () => {
+    const selectedStr = await AsyncStorage.getItem('selectedChild');
+    if (!selectedStr) return;
+    const childId = JSON.parse(selectedStr).child_id;
+
+    setLoadingAI(true);
+    try {
+      const res = await API.post(`/reports/generate/${childId}`);
+      setReport(res.data);
+    } catch (e: any) {
+      console.error("AI Generation failed:", e.message);
+    } finally {
+      setLoadingAI(false);
+    }
+  };
 
   const domains: CognitiveDomain[] = ['memory', 'attention', 'logic', 'processing_speed', 'comprehension'];
 
@@ -68,6 +96,48 @@ export default function CognitiveProfileScreen() {
             <Text style={styles.totalStars}>Stars Earned: {profile?.totalStars || 0}</Text>
           </View>
         </View>
+
+        {/* AI Analysis Result */}
+        {report && (
+          <View style={styles.reportCard}>
+            <View style={styles.reportHeader}>
+              <Text style={styles.reportTitle}>🧠 AI Behavioral Analysis</Text>
+              <View style={styles.readinessBadge}>
+                <Text style={styles.readinessText}>{report.readiness_level}</Text>
+              </View>
+            </View>
+            
+            <Text style={styles.reportSummary}>{report.summary}</Text>
+
+            <View style={styles.reportSection}>
+              <Text style={styles.subSectionTitle}>💡 Strengths</Text>
+              {report.strengths.map((s: string, i: number) => (
+                <Text key={i} style={styles.bulletItem}>• {s}</Text>
+              ))}
+            </View>
+
+            <View style={styles.reportSection}>
+              <Text style={styles.subSectionTitle}>🔍 Areas to Watch</Text>
+              {report.weaknesses.map((w: string, i: number) => (
+                <Text key={i} style={styles.bulletItem}>• {w}</Text>
+              ))}
+            </View>
+
+            <View style={styles.recommendationBox}>
+              <Text style={styles.recTitle}>🎯 Parent Recommendations</Text>
+              {report.recommendations.map((r: string, i: number) => (
+                <Text key={i} style={styles.recText}>- {r}</Text>
+              ))}
+            </View>
+
+            <View style={styles.nextGameBox}>
+              <Text style={styles.nextGameLabel}>Next Recommended Game:</Text>
+              <Text style={styles.nextGameValue}>
+                {report.next_game.replace(/-/g, ' ')} ({report.difficulty_adjustment})
+              </Text>
+            </View>
+          </View>
+        )}
 
         {/* Domain Breakdown */}
         <View style={styles.breakdownCard}>
@@ -122,12 +192,18 @@ export default function CognitiveProfileScreen() {
           ))}
         </View>
 
-        {/* AI Analysis Placeholder */}
-        <Pressable style={styles.aiButton}>
-          <Text style={styles.aiButtonEmoji}>🤖</Text>
+        {/* AI Analysis Button */}
+        <Pressable 
+          style={[styles.aiButton, loadingAI && { opacity: 0.7 }]} 
+          onPress={handleGenerateAI}
+          disabled={loadingAI}
+        >
+          <Text style={styles.aiButtonEmoji}>{loadingAI ? '⏳' : '🤖'}</Text>
           <View>
-            <Text style={styles.aiButtonTitle}>AI Analysis</Text>
-            <Text style={styles.aiButtonSub}>Get detailed insights (coming soon)</Text>
+            <Text style={styles.aiButtonTitle}>{loadingAI ? 'Analyzing...' : 'Generate AI Insights'}</Text>
+            <Text style={styles.aiButtonSub}>
+              {loadingAI ? 'Processing interaction patterns...' : 'Get behavioral analysis from OpenClaw'}
+            </Text>
           </View>
         </Pressable>
 
@@ -242,4 +318,104 @@ const styles = StyleSheet.create({
   aiButtonEmoji: { fontSize: 36 },
   aiButtonTitle: { fontSize: 18, fontWeight: '800', color: '#FFF' },
   aiButtonSub: { fontSize: 13, color: 'rgba(255,255,255,0.7)', fontWeight: '500' },
+  
+  reportCard: {
+    backgroundColor: '#FFF',
+    borderRadius: 24,
+    padding: 20,
+    marginBottom: 16,
+    borderWidth: 2,
+    borderColor: '#2979FF',
+    shadowColor: '#2979FF',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  reportHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  reportTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#2D1B0E',
+  },
+  readinessBadge: {
+    backgroundColor: '#E3F2FD',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#2979FF',
+  },
+  readinessText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#2979FF',
+  },
+  reportSummary: {
+    fontSize: 15,
+    lineHeight: 22,
+    color: '#5D4037',
+    marginBottom: 20,
+    fontStyle: 'italic',
+  },
+  reportSection: {
+    marginBottom: 16,
+  },
+  subSectionTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#2D1B0E',
+    marginBottom: 8,
+  },
+  bulletItem: {
+    fontSize: 14,
+    color: '#5D4037',
+    marginBottom: 4,
+    paddingLeft: 8,
+  },
+  recommendationBox: {
+    backgroundColor: '#F0F7FF',
+    padding: 16,
+    borderRadius: 16,
+    marginBottom: 16,
+    borderLeftWidth: 4,
+    borderLeftColor: '#2979FF',
+  },
+  recTitle: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#2979FF',
+    marginBottom: 8,
+  },
+  recText: {
+    fontSize: 14,
+    color: '#5D4037',
+    lineHeight: 20,
+    marginBottom: 4,
+  },
+  nextGameBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#FFF4E5',
+    padding: 12,
+    borderRadius: 12,
+  },
+  nextGameLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#8B5A2B',
+  },
+  nextGameValue: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#FF7A00',
+    textTransform: 'capitalize',
+  },
 });
+
