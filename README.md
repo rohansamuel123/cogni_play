@@ -1,19 +1,19 @@
-# 🧠 IntelliSight
+# IntelliSight
 
 ### AI-Powered Cognitive Development Platform for Early Learners
 
 ---
 
-## 🚀 Today's Core Updates (May 7-8)
+## Today's Core Updates (May 7-8)
 We have made significant architectural upgrades to the platform:
-- **🤖 OpenClaw AI Integration**: Automated behavioral analysis that provides personalized strengths, weaknesses, and recommendations for every child.
-- **📈 Progress Tracking**: Implemented a `cognitive_history` system to track growth over time (ready for charting).
-- **🗄️ Normalized Scoring**: Refactored the database to a "One Row Per Domain" structure—eliminating empty columns and making the system infinitely scalable.
-- **🔄 Smart Synchronization**: Automatic backend recalculation of cognitive profiles every time a game is finished.
+- **OpenClaw AI Integration**: Automated behavioral analysis that provides personalized strengths, weaknesses, and recommendations for every child.
+- **Progress Tracking**: Implemented a cognitive_history system to track growth over time (ready for charting).
+- **Normalized Scoring**: Refactored the database to a "One Row Per Domain" structure—eliminating empty columns and making the system infinitely scalable.
+- **Smart Synchronization**: Automatic backend recalculation of cognitive profiles every time a game is finished.
 
 ---
 
-## ⚙️ How to Run IntelliSight Locally
+## How to Run IntelliSight Locally
 
 ### 1. Prerequisites
 - **Node.js** (v18+)
@@ -56,6 +56,24 @@ npm install
 # Run Expo
 npx expo start
 ```
+
+
+### 4. Stopping the Project
+If you used the startup scripts, you can stop everything with:
+
+**Git Bash (Recommended):**
+```bash
+bash stop.sh
+```
+
+**CMD / PowerShell:**
+```cmd
+stop.bat
+```
+
+---
+*Note: If you are using CMD or PowerShell, you can also run `startup.bat` to start the project.*
+
 *Note: Open the Expo Go app on your phone and scan the QR code. Ensure your phone and laptop are on the same Wi-Fi.*
 
 ---

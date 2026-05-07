@@ -1,0 +1,29 @@
+env: load .env
+env: export EXPO_PUBLIC_API_URL EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID
+Starting project at D:\Projects\intelliSight\frontend
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Starting Metro Bundler
+warning: Bundler cache is empty, rebuilding (this may take a minute)
+Waiting on http://localhost:8081
+Logs for your project will appear below.
+
+D:\Projects\intelliSight\frontend>More? 'acls' is not recognized as an internal or external command,
+operable program or batch file.
+
+D:\Projects\intelliSight\frontend>'startup.bat' is not recognized as an internal or external command,
+operable program or batch file.
+
+D:\Projects\intelliSight\frontend>'startup.bat' is not recognized as an internal or external command,
+operable program or batch file.
+
+D:\Projects\intelliSight\frontend>'stop.bat' is not recognized as an internal or external command,
+operable program or batch file.
+
+D:\Projects\intelliSight\frontend>'startup.bat' is not recognized as an internal or external command,
+operable program or batch file.
+
+D:\Projects\intelliSight\frontend>'startup.bat' is not recognized as an internal or external command,
+operable program or batch file.
+
+D:\Projects\intelliSight\frontend>
