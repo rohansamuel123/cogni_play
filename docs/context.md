@@ -39,7 +39,7 @@ We measure:
 - **Routing:** Expo Router (file-based routing)
 - **State/Storage:** `@react-native-async-storage/async-storage` for local caching of child data and auth tokens.
 - **API Client:** Axios for API calls (base URL from `.env` via `EXPO_PUBLIC_API_URL` with JWT interceptors)
-- **Styling:** React Native StyleSheet, gamified UI theme (warm creams, vibrant orange, 3D pill shapes)
+- **Styling:** React Native StyleSheet, Playful 3D tactile UI (Duolingo-style) with solid bottom borders, vibrant colors, and physical push-down effects.
 - **Scoring Engine:** Custom `scoring.ts` utility for score normalization, aggregation, and cognitive profiling
 
 ### Backend
@@ -118,7 +118,7 @@ The platform is designed around a **Parent -> Child -> Gameplay** hierarchy.
 - **`app/dashboard.tsx`**: Main hub. Handles the "Who's Playing?" child picker, displays the active child's score ring, domain progress, and vertical Journey Map of games. Includes options to Switch Child, Delete Child, or Delete Account.
 - **`app/game-results.tsx`**: Post-game screen showing stars and score.
 - **`app/cognitive-profile.tsx`**: Deep dive into the active child's stats (Radar chart, session history, AI button).
-- **`app/games/*.tsx`**: The 8 individual games. Each game reads the `selectedChild` on mount and passes it to the scoring engine when the round finishes.
+- **`app/games/*.tsx`**: The 10 individual games (including Story Builder and Color Mixer Lab). Each game reads the `selectedChild` on mount and passes it to the scoring engine when the round finishes.
 - **`utils/scoring.ts`**: The brain of the frontend. Calculates 0-100 normalized scores based on weighted formulas (50% accuracy + 30% level + 20% speed). Handles all `AsyncStorage` reading/writing and backend Axios API calls to sync sessions.
 
 ---
@@ -138,6 +138,14 @@ cd backend
 .\venv\Scripts\python.exe db_migrate.py
 ```
 *(Note: This deletes all existing local data. For production, the team will need to implement `Alembic` for non-destructive migrations).*
+
+### Seeding Games
+To initialize or update the game list in the database, run the seeding script:
+```bash
+cd backend
+.\venv\Scripts\python.exe add_games.py
+```
+This adds all 10 registered games (like Color Recall, Story Builder, etc.) to the `games` table.
 
 ---
 

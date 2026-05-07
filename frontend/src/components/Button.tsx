@@ -13,65 +13,90 @@ export default function Button({ title, variant = 'primary', style, textStyle, .
     <Pressable
       style={({ pressed }) => [
         styles.container,
-        styles[variant],
-        pressed && styles.pressed,
         style,
       ]}
       {...props}
     >
-      <Text style={[styles.text, styles[`${variant}Text`], textStyle]}>{title}</Text>
+      {({ pressed }) => (
+        <View style={[
+          styles.buttonBase,
+          styles[`${variant}Base`],
+          pressed && styles.buttonPressed
+        ]}>
+          <View style={[
+            styles.buttonFace,
+            styles[`${variant}Face`],
+            pressed && styles.facePressed
+          ]}>
+            <Text style={[styles.text, styles[`${variant}Text`], textStyle]}>{title}</Text>
+          </View>
+        </View>
+      )}
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 8,
+    marginVertical: 10,
     width: '100%',
+  },
+  buttonBase: {
+    borderRadius: 20,
+    width: '100%',
+    paddingBottom: 6, // The "depth" of the 3D button
+  },
+  buttonFace: {
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: -6, // Offset to sit on top of the base
   },
-  pressed: {
-    opacity: 0.9,
-    transform: [{ scale: 0.96 }],
+  buttonPressed: {
+    paddingBottom: 0,
+    marginTop: 6,
   },
-  primary: {
-    backgroundColor: '#FF7A00',
-    shadowColor: '#FF7A00',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 6,
+  facePressed: {
+    marginTop: 0,
+  },
+  // Primary - Vibrant Orange
+  primaryBase: {
+    backgroundColor: '#E66E00', // Darker bottom edge
+  },
+  primaryFace: {
+    backgroundColor: '#FF8A00', // Brighter face
   },
   primaryText: {
     color: '#FFFFFF',
   },
-  secondary: {
+  // Secondary - Sunny Yellow
+  secondaryBase: {
+    backgroundColor: '#D9A500',
+  },
+  secondaryFace: {
     backgroundColor: '#FFD166',
-    shadowColor: '#FFD166',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-    elevation: 6,
   },
   secondaryText: {
     color: '#2D1B0E',
   },
-  outline: {
-    backgroundColor: '#FFF9F0',
+  // Outline - Sleek Blue/White
+  outlineBase: {
+    backgroundColor: '#E5E7EB',
+  },
+  outlineFace: {
+    backgroundColor: '#FFFFFF',
     borderWidth: 2,
-    borderColor: '#FF7A00',
-    borderStyle: 'dashed', // Fun dashed border for outline
+    borderColor: '#E5E7EB',
   },
   outlineText: {
-    color: '#FF7A00',
+    color: '#374151',
   },
   text: {
     fontSize: 18,
     fontWeight: '800',
-    letterSpacing: 0.5,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
   },
 });

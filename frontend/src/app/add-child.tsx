@@ -187,11 +187,13 @@ const styles = StyleSheet.create({
 
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 20,
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#EFEFEF',
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+    borderBottomWidth: 6,
+    borderBottomColor: '#E5E7EB',
   },
 
   label: {
@@ -202,14 +204,17 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    backgroundColor: '#F9FAFB',
-    borderWidth: 1,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
     borderColor: '#E5E7EB',
-    borderRadius: 12,
+    borderBottomWidth: 5,
+    borderBottomColor: '#E5E7EB',
+    borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: '#111827',
+    color: '#1F2937',
+    fontWeight: '600',
   },
 
   avatarGrid: {
@@ -267,11 +272,13 @@ const styles = StyleSheet.create({
   genderOption: {
     flex: 1,
     paddingVertical: 14,
-    borderRadius: 12,
-    backgroundColor: '#F9FAFB',
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: '#E5E7EB',
+    borderBottomWidth: 4,
+    borderBottomColor: '#E5E7EB',
   },
   genderSelected: {
     borderColor: '#FF7A00',
