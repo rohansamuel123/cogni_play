@@ -9,98 +9,69 @@ interface ButtonProps extends PressableProps {
 }
 
 export default function Button({ title, variant = 'primary', style, textStyle, ...props }: ButtonProps) {
-  const [isPressed, setIsPressed] = useState(false);
-
   return (
     <Pressable
-      onPressIn={() => setIsPressed(true)}
-      onPressOut={() => setIsPressed(false)}
-      style={[
+      style={({ pressed }) => [
         styles.container,
+        styles[variant],
+        pressed && styles.pressed,
         style,
       ]}
       {...props}
     >
-      <View style={[
-        styles.buttonBase,
-        styles[`${variant}Base`],
-        isPressed ? styles.buttonPressed : styles.buttonUnpressed,
-      ]}>
-        <View style={[
-          styles.buttonInner,
-          styles[`${variant}Inner`],
-        ]}>
-          <Text style={[styles.text, styles[`${variant}Text`], textStyle]}>{title}</Text>
-        </View>
-      </View>
+      <Text style={[styles.text, styles[`${variant}Text`], textStyle]}>{title}</Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
+    marginVertical: 8,
     width: '100%',
-  },
-  buttonBase: {
-    borderRadius: 30, // Pill shape
-    width: '100%',
-  },
-  buttonUnpressed: {
-    paddingBottom: 8, // This acts as the "3D" depth
-  },
-  buttonPressed: {
-    paddingBottom: 0, // Button pushes down
-    transform: [{ translateY: 8 }], // Visual push effect
-  },
-  buttonInner: {
-    paddingVertical: 18,
-    paddingHorizontal: 32,
-    borderRadius: 30,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.3)', // Light top highlight
   },
-  // Primary - Vibrant Orange
-  primaryBase: {
-    backgroundColor: '#D96500', // Darker bottom edge
+  pressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.96 }],
   },
-  primaryInner: {
-    backgroundColor: '#FF8A00', // Brighter face
+  primary: {
+    backgroundColor: '#FF7A00',
+    shadowColor: '#FF7A00',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 6,
   },
   primaryText: {
     color: '#FFFFFF',
-    textShadowColor: 'rgba(0,0,0,0.1)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 2,
   },
-  // Secondary - Sunny Yellow
-  secondaryBase: {
-    backgroundColor: '#D9A500', // Darker bottom edge
-  },
-  secondaryInner: {
-    backgroundColor: '#FFD166', // Brighter face
+  secondary: {
+    backgroundColor: '#FFD166',
+    shadowColor: '#FFD166',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
+    elevation: 6,
   },
   secondaryText: {
-    color: '#8B5A2B',
+    color: '#2D1B0E',
   },
-  // Outline
-  outlineBase: {
-    backgroundColor: '#FF8A00',
-  },
-  outlineInner: {
+  outline: {
     backgroundColor: '#FFF9F0',
-    borderColor: '#FF8A00',
-    borderWidth: 3,
+    borderWidth: 2,
+    borderColor: '#FF7A00',
+    borderStyle: 'dashed', // Fun dashed border for outline
   },
   outlineText: {
-    color: '#FF8A00',
+    color: '#FF7A00',
   },
   text: {
-    fontSize: 20,
-    fontWeight: '900',
-    letterSpacing: 1.5,
-    textTransform: 'uppercase',
+    fontSize: 18,
+    fontWeight: '800',
+    letterSpacing: 0.5,
   },
 });

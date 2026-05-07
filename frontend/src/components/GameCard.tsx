@@ -20,11 +20,12 @@ export default function GameCard({
       onPress={onPress}
       style={({ pressed }) => [
         styles.card,
+        { backgroundColor: domainColor + '10', borderColor: domainColor + '30' },
         pressed && styles.cardPressed,
       ]}
     >
       {/* Left: Emoji */}
-      <View style={[styles.emojiContainer, { backgroundColor: domainColor + '18' }]}>
+      <View style={[styles.emojiContainer, { backgroundColor: '#FFFFFF', shadowColor: domainColor }]}>
         <Text style={styles.emoji}>{emoji}</Text>
       </View>
 
@@ -55,73 +56,75 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
+    borderRadius: 24,
     padding: 16,
-    marginBottom: 12,
-    shadowColor: '#8B5A2B',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
-    borderWidth: 1.5,
-    borderColor: '#F5E6D3',
+    marginBottom: 14,
+    borderWidth: 2,
   },
-
   cardPressed: {
-    transform: [{ scale: 0.97 }],
-    shadowOpacity: 0.12,
+    opacity: 0.7,
+    transform: [{ scale: 0.98 }],
   },
   emojiContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
+    width: 60,
+    height: 60,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 14,
+    marginRight: 16,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 3,
   },
   emoji: {
-    fontSize: 28,
+    fontSize: 32,
   },
   info: {
     flex: 1,
   },
   name: {
-    fontSize: 17,
+    fontSize: 18,
     fontWeight: '800',
     color: '#2D1B0E',
-    marginBottom: 2,
+    marginBottom: 4,
   },
   description: {
     fontSize: 13,
     color: '#8B7355',
-    marginBottom: 6,
+    marginBottom: 8,
+    fontWeight: '500',
   },
   badge: {
     alignSelf: 'flex-start',
     paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
   },
   badgeText: {
     fontSize: 11,
-    fontWeight: '800',
+    fontWeight: '900',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
-
   starsContainer: {
     flexDirection: 'row',
     marginLeft: 8,
   },
   star: {
-    fontSize: 18,
+    fontSize: 20,
     marginLeft: 2,
   },
   starEarned: {
     color: '#FFB300',
+    textShadowColor: '#FFB30050',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
   starEmpty: {
-    color: '#E0D5C8',
+    color: '#FFFFFF',
+    textShadowColor: '#E0D5C8',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 1,
   },
 });

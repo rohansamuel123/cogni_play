@@ -120,18 +120,17 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#FFF9F0' },
+  safeArea: { flex: 1, backgroundColor: '#FFFFFF' },
   container: { flex: 1 },
   inner: { flex: 1, padding: 24, justifyContent: 'center' },
-  title: { fontSize: 32, fontWeight: '900', color: '#FF7A00', marginBottom: 8, textAlign: 'center' },
-  subtitle: { fontSize: 16, color: '#8B5A2B', textAlign: 'center', fontWeight: '500', marginBottom: 32 },
+  title: { fontSize: 32, fontWeight: '800', color: '#111827', marginBottom: 8, textAlign: 'center', letterSpacing: -0.5 },
+  subtitle: { fontSize: 16, color: '#6B7280', textAlign: 'center', fontWeight: '500', marginBottom: 32 },
   formContainer: { marginBottom: 24 },
   inputGroup: { marginBottom: 20 },
-  label: { fontSize: 15, fontWeight: '700', color: '#FF7A00', marginBottom: 8, marginLeft: 8 },
+  label: { fontSize: 14, fontWeight: '600', color: '#374151', marginBottom: 8, marginLeft: 4 },
   input: {
-    backgroundColor: '#FFFFFF', borderWidth: 2, borderColor: '#FFE0B2', borderRadius: 24,
-    paddingHorizontal: 20, paddingVertical: 16, fontSize: 16, color: '#333333',
-    shadowColor: '#FF7A00', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
+    backgroundColor: '#F9FAFB', borderWidth: 1, borderColor: '#E5E7EB', borderRadius: 12,
+    paddingHorizontal: 16, paddingVertical: 14, fontSize: 16, color: '#111827',
   },
   actionContainer: { marginTop: 8 },
 });

@@ -180,26 +180,24 @@ export default function SequenceBuilder() {
             </Text>
 
             {/* Sequence display */}
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.sequenceScroll}>
-              <View style={styles.sequenceRow}>
-                {question.sequence.map((item, i) => (
-                  <View key={i} style={styles.seqItemContainer}>
-                    <View style={[
-                      styles.seqItem,
-                      item === '?' && styles.seqItemMissing,
-                    ]}>
-                      <Text style={[
-                        styles.seqText,
-                        item === '?' && styles.seqTextMissing,
-                      ]}>{item}</Text>
-                    </View>
-                    {i < question.sequence.length - 1 && (
-                      <Text style={styles.arrow}>→</Text>
-                    )}
+            <View style={styles.sequenceWrapContainer}>
+              {question.sequence.map((item, i) => (
+                <View key={i} style={styles.seqItemContainer}>
+                  <View style={[
+                    styles.seqItem,
+                    item === '?' && styles.seqItemMissing,
+                  ]}>
+                    <Text style={[
+                      styles.seqText,
+                      item === '?' && styles.seqTextMissing,
+                    ]}>{item}</Text>
                   </View>
-                ))}
-              </View>
-            </ScrollView>
+                  {i < question.sequence.length - 1 && (
+                    <Text style={styles.arrow}>→</Text>
+                  )}
+                </View>
+              ))}
+            </View>
 
             {feedback && <Text style={styles.feedbackText}>{feedback}</Text>}
 
@@ -237,13 +235,19 @@ const styles = StyleSheet.create({
   introHint: { fontSize: 14, color: '#B0A090', fontWeight: '600' },
   promptText: { fontSize: 24, fontWeight: '800', color: '#2D1B0E', marginBottom: 4 },
   progressText: { fontSize: 14, fontWeight: '600', color: '#B0A090', marginBottom: 24 },
-  sequenceScroll: { marginBottom: 24, maxHeight: 80 },
-  sequenceRow: { flexDirection: 'row', alignItems: 'center' },
-  seqItemContainer: { flexDirection: 'row', alignItems: 'center' },
+  sequenceWrapContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+    gap: 4,
+  },
+  seqItemContainer: { flexDirection: 'row', alignItems: 'center', marginVertical: 4 },
   seqItem: {
-    width: 56,
-    height: 56,
-    borderRadius: 14,
+    width: 46,
+    height: 46,
+    borderRadius: 12,
     backgroundColor: '#00BFA5',
     justifyContent: 'center',
     alignItems: 'center',
@@ -259,9 +263,9 @@ const styles = StyleSheet.create({
     borderColor: '#FFB300',
     borderStyle: 'dashed',
   },
-  seqText: { fontSize: 22, fontWeight: '900', color: '#FFF' },
-  seqTextMissing: { color: '#FFB300', fontSize: 28 },
-  arrow: { fontSize: 20, color: '#D0C0B0', marginHorizontal: 6 },
+  seqText: { fontSize: 18, fontWeight: '900', color: '#FFF' },
+  seqTextMissing: { color: '#FFB300', fontSize: 24 },
+  arrow: { fontSize: 16, color: '#D0C0B0', marginHorizontal: 2 },
   feedbackText: { fontSize: 20, fontWeight: '800', marginBottom: 16, color: '#FF7A00' },
   optionsGrid: {
     flexDirection: 'row',

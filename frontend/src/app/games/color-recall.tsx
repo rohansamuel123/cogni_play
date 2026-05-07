@@ -70,14 +70,14 @@ export default function ColorRecall() {
 
   const flashTile = (index: number, duration: number): Promise<void> => {
     return new Promise((resolve) => {
+      // Just turn on the glow
       setActiveIndex(index);
-      Animated.sequence([
-        Animated.timing(tileAnims[index], { toValue: 1.15, duration: 100, useNativeDriver: true }),
-        Animated.timing(tileAnims[index], { toValue: 1, duration: duration, useNativeDriver: true }),
-      ]).start(() => {
+
+      // Wait for duration, then turn off the glow
+      setTimeout(() => {
         setActiveIndex(null);
-        setTimeout(resolve, 200);
-      });
+        setTimeout(resolve, 250); // Pause before next tile
+      }, duration);
     });
   };
 

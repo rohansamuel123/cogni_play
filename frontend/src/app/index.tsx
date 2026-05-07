@@ -222,7 +222,7 @@ export default function Login() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFF9F0', // Soft, warm cream background
+    backgroundColor: '#FFFFFF', // Clean white background
   },
   container: {
     flex: 1,
@@ -237,68 +237,64 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: 40,
     marginTop: 20,
   },
   title: {
-    fontSize: 40, // Slightly bigger since mascot is gone
-    fontWeight: '900',
-    color: '#FF7A00', // Vibrant orange
+    fontSize: 36,
+    fontWeight: '800',
+    color: '#111827', // Sleek dark gray instead of orange
     marginBottom: 8,
     letterSpacing: -0.5,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    color: '#8B5A2B', // Warm brown/gray
+    color: '#6B7280', // Sleek gray
     textAlign: 'center',
     fontWeight: '500',
   },
   profilesSection: {
-    marginBottom: 16,
+    marginBottom: 24,
   },
   profilesTitle: {
-    fontSize: 18, // Bigger title
-    fontWeight: '800',
-    color: '#FF7A00',
-    marginBottom: 16, // More spacing
-    marginLeft: 8,
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#6B7280',
+    marginBottom: 16,
+    marginLeft: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   profilesScroll: {
     flexDirection: 'row',
     marginBottom: 16,
-    paddingBottom: 8, // Room for shadow
   },
   profileCard: {
     alignItems: 'center',
-    marginRight: 20, // More spacing
-    width: 90, // Wider card
+    marginRight: 20,
+    width: 80,
   },
   profileAvatar: {
-    width: 80, // Bigger avatar
-    height: 80, // Bigger avatar
-    borderRadius: 40, // Circular
-    backgroundColor: '#FFD180',
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 4, // Thicker border
-    borderColor: '#FF7A00',
-    marginBottom: 12, // More space
-    shadowColor: '#FF7A00',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    marginBottom: 12,
   },
   profileInitial: {
-    fontSize: 36, // Bigger initial
-    fontWeight: '900',
-    color: '#FFF',
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#374151',
   },
   profileName: {
-    fontSize: 15, // Bigger name
-    fontWeight: '800', // Bolder name
-    color: '#8B5A2B',
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#374151',
     textAlign: 'center',
   },
   formContainer: {
@@ -308,34 +304,28 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#FF7A00',
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#374151',
     marginBottom: 8,
-    marginLeft: 8,
+    marginLeft: 4,
   },
   input: {
-    backgroundColor: '#FFFFFF',
-    borderWidth: 2,
-    borderColor: '#FFE0B2',
-    borderRadius: 24, // High border radius for soft look
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
     fontSize: 16,
-    color: '#333333',
-    shadowColor: '#FF7A00',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    color: '#111827',
   },
   forgotPassword: {
-    color: '#FF7A00',
-    fontSize: 14,
-    fontWeight: '700',
+    color: '#6B7280',
+    fontSize: 13,
+    fontWeight: '500',
     textAlign: 'right',
     marginTop: -8,
-    marginRight: 4,
   },
   actionContainer: {
     marginTop: 8,
@@ -344,18 +334,18 @@ const styles = StyleSheet.create({
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 16,
+    marginVertical: 20,
   },
   divider: {
     flex: 1,
-    height: 2,
-    backgroundColor: '#FFE0B2',
-    borderRadius: 2,
+    height: 1,
+    backgroundColor: '#E5E7EB',
   },
   dividerText: {
-    color: '#FFB74D',
+    color: '#9CA3AF',
     paddingHorizontal: 16,
     fontSize: 12,
-    fontWeight: '800',
+    fontWeight: '500',
+    textTransform: 'uppercase',
   },
 });

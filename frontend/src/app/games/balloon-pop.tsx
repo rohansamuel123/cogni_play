@@ -209,12 +209,7 @@ export default function BalloonPop() {
                   ]}
                 >
                   <Pressable onPress={() => handleTap(balloon)}>
-                    <View
-                      style={[
-                        styles.balloonBody,
-                        { backgroundColor: balloon.isGo ? '#FF6D00' : '#FF1744' },
-                      ]}
-                    >
+                    <View style={styles.balloonBody}>
                       <Text style={styles.balloonEmoji}>{balloon.isGo ? '🎈' : '💣'}</Text>
                     </View>
                   </Pressable>
@@ -253,16 +248,10 @@ const styles = StyleSheet.create({
     width: 60,
   },
   balloonBody: {
-    width: 56,
-    height: 68,
-    borderRadius: 28,
+    width: 60,
+    height: 70,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 5,
-    elevation: 4,
   },
-  balloonEmoji: { fontSize: 28 },
+  balloonEmoji: { fontSize: 50 },
 });
