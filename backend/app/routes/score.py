@@ -1,36 +1,45 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models.score import CognitiveScore
-from app.schemas.score import CognitiveScoreCreate, CognitiveScoreResponse
+from app.schemas.score import CognitiveScoreResponse
+from typing import List
+from datetime import datetime
+
+from app.services import score_service
+from app.models.score import DomainScore, CognitiveHistory
 
 router = APIRouter(prefix="/scores", tags=["Cognitive Scores"])
 
-@router.post("/", response_model=CognitiveScoreResponse)
-def create_score(score: CognitiveScoreCreate, db: Session = Depends(get_db)):
-    existing = db.query(CognitiveScore).filter(CognitiveScore.user_id == score.user_id).first()
-    if existing:
-        raise HTTPException(status_code=400, detail="Score already exists for this user")
-    new_score = CognitiveScore(**score.dict())
-    db.add(new_score)
-    db.commit()
-    db.refresh(new_score)
-    return new_score
+@router.get("/{child_id}", response_model=CognitiveScoreResponse)
+def get_score(child_id: int, db: Session = Depends(get_db)):
+    """
+    Fetches the child's profile. Internally aggregates normalized domain rows 
+    into a single object for frontend compatibility.
+    """
+    scores = score_service.get_aggregated_scores(db, child_id)
+    
+    # We return a response object that matches CognitiveScoreResponse schema
+    return {
+        "score_id": 0, # logical ID for schema
+        "child_id": child_id,
+        **scores,
+        "updated_at": datetime.now() 
+    }
 
-@router.get("/{user_id}", response_model=CognitiveScoreResponse)
-def get_score(user_id: int, db: Session = Depends(get_db)):
-    score = db.query(CognitiveScore).filter(CognitiveScore.user_id == user_id).first()
-    if not score:
-        raise HTTPException(status_code=404, detail="Score not found for this user")
-    return score
-
-@router.put("/{user_id}", response_model=CognitiveScoreResponse)
-def update_score(user_id: int, score: CognitiveScoreCreate, db: Session = Depends(get_db)):
-    existing = db.query(CognitiveScore).filter(CognitiveScore.user_id == user_id).first()
-    if not existing:
-        raise HTTPException(status_code=404, detail="Score not found for this user")
-    for key, value in score.dict().items():
-        setattr(existing, key, value)
-    db.commit()
-    db.refresh(existing)
-    return existing
+@router.get("/{child_id}/history", response_model=List[dict])
+def get_score_history(child_id: int, db: Session = Depends(get_db)):
+    """
+    Returns the chronological history of all score updates for progress charts.
+    """
+    history = db.query(CognitiveHistory).filter(
+        CognitiveHistory.child_id == child_id
+    ).order_by(CognitiveHistory.recorded_at.asc()).all()
+    
+    return [
+        {
+            "domain": h.domain,
+            "score": h.score,
+            "recorded_at": h.recorded_at
+        } for h in history
+    ]
+

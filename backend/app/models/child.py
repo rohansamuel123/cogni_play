@@ -17,3 +17,9 @@ class Child(Base):
     # Relationships
     parent = relationship("User", back_populates="children")
     game_sessions = relationship("Session", back_populates="child", cascade="all, delete")
+    domain_scores = relationship("DomainScore", back_populates="child", cascade="all, delete")
+    cognitive_history = relationship("CognitiveHistory", back_populates="child", cascade="all, delete")
+    reports = relationship("Report", back_populates="child", cascade="all, delete")
+
+
+

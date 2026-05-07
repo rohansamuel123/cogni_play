@@ -15,9 +15,9 @@ class User(Base):
     created_at  = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationships
-    reports         = relationship("Report", back_populates="user", cascade="all, delete")
-    cognitive_score = relationship("CognitiveScore", back_populates="user", uselist=False)
     game_sessions   = relationship("Session", back_populates="user", cascade="all, delete")
     children        = relationship("Child", back_populates="parent", cascade="all, delete")
+
+
 
 

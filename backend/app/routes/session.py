@@ -18,6 +18,8 @@ router = APIRouter(prefix="/sessions", tags=["Sessions"])
 
 # ── New child-scoped endpoints ────────────────────────────────────────────────
 
+from app.services import score_service
+
 @router.post("/child/{child_id}", response_model=GameSessionResponse, status_code=status.HTTP_201_CREATED)
 def create_child_session(
     child_id: int,
@@ -47,7 +49,16 @@ def create_child_session(
     db.add(new_session)
     db.commit()
     db.refresh(new_session)
+
+    # Automatically update the cognitive profile
+    try:
+        score_service.recalculate_child_scores(db, child_id)
+    except Exception as e:
+        print(f"Failed to update cognitive profile: {e}")
+        # We don't raise an exception here because the session is already saved
+    
     return new_session
+
 
 
 @router.get("/child/{child_id}", response_model=List[GameSessionResponse])

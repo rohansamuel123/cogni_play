@@ -24,11 +24,11 @@ def create_report(report: ReportCreate, db: Session = Depends(get_db)):
 def get_all_reports(db: Session = Depends(get_db)):
     return db.query(Report).all()
 
-@router.get("/user/{user_id}", response_model=List[ReportResponse])
-def get_reports_by_user(user_id: int, db: Session = Depends(get_db)):
-    reports = db.query(Report).filter(Report.user_id == user_id).all()
+@router.get("/child/{child_id}", response_model=List[ReportResponse])
+def get_reports_by_child(child_id: int, db: Session = Depends(get_db)):
+    reports = db.query(Report).filter(Report.child_id == child_id).all()
     if not reports:
-        raise HTTPException(status_code=404, detail="No reports found for this user")
+        raise HTTPException(status_code=404, detail="No reports found for this child")
     return reports
 
 @router.get("/{report_id}", response_model=ReportResponse)

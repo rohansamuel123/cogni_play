@@ -3,8 +3,8 @@ from datetime import datetime
 from typing import Optional, Any
 
 class ReportCreate(BaseModel):
-    user_id: int
-    session_id: int
+    child_id: int
+    session_id: Optional[int] = None
     strengths: Optional[Any] = None
     weaknesses: Optional[Any] = None
     recommendations: Optional[Any] = None
@@ -13,8 +13,8 @@ class ReportCreate(BaseModel):
 
 class ReportResponse(BaseModel):
     report_id: int
-    user_id: int
-    session_id: int
+    child_id: int
+    session_id: Optional[int] = None
     strengths: Optional[Any] = None
     weaknesses: Optional[Any] = None
     recommendations: Optional[Any] = None
