@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Pressable, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
 import { saveGameSession, normalizeScore, calculateStars } from '../../utils/scoring';
@@ -32,6 +33,13 @@ export default function CardMatch() {
   const [startTime, setStartTime] = useState(0);
   const [roundScores, setRoundScores] = useState<number[]>([]);
   const [isChecking, setIsChecking] = useState(false);
+  const [childId, setChildId] = useState<number>(0);
+
+  useEffect(() => {
+    AsyncStorage.getItem('selectedChild').then((str) => {
+      if (str) setChildId(JSON.parse(str).child_id);
+    });
+  }, []);
 
   const diff = DIFFICULTY[round];
 
@@ -120,7 +128,7 @@ export default function CardMatch() {
       const avgScore = Math.round(newScores.reduce((a, b) => a + b, 0) / newScores.length);
       const stars = calculateStars(avgScore);
 
-      saveGameSession({
+      saveGameSession(childId, {
         gameId: 'card-match',
         domain: 'memory',
         score: moves + 1,

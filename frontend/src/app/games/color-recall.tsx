@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Pressable, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
 import { saveGameSession, normalizeScore, calculateStars } from '../../utils/scoring';
@@ -27,6 +28,13 @@ export default function ColorRecall() {
   const [roundScores, setRoundScores] = useState<number[]>([]);
   const [startTime, setStartTime] = useState(0);
   const [message, setMessage] = useState('');
+  const [childId, setChildId] = useState<number>(0);
+
+  useEffect(() => {
+    AsyncStorage.getItem('selectedChild').then((str) => {
+      if (str) setChildId(JSON.parse(str).child_id);
+    });
+  }, []);
 
   const tileAnims = useRef(
     Array.from({ length: GRID_COLS * GRID_ROWS }, () => new Animated.Value(1))
@@ -109,7 +117,7 @@ export default function ColorRecall() {
       const avgScore = Math.round(allScores.reduce((a, b) => a + b, 0) / allScores.length);
       const stars = calculateStars(avgScore);
 
-      saveGameSession({
+      saveGameSession(childId, {
         gameId: 'color-recall',
         domain: 'memory',
         score: correct,

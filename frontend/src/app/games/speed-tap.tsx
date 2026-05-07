@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Pressable, Animated, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
 import { saveGameSession, normalizeScore, calculateStars } from '../../utils/scoring';
@@ -26,6 +27,13 @@ export default function SpeedTap() {
   const [startTime, setStartTime] = useState(0);
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const areaHeight = 400;
+  const [childId, setChildId] = useState<number>(0);
+
+  useEffect(() => {
+    AsyncStorage.getItem('selectedChild').then((str) => {
+      if (str) setChildId(JSON.parse(str).child_id);
+    });
+  }, []);
 
   const diff = DIFFICULTY[round];
 
@@ -88,7 +96,7 @@ export default function SpeedTap() {
     const normalized = normalizeScore(accuracy, elapsed, 3, 3);
     const stars = calculateStars(normalized);
 
-    saveGameSession({
+    saveGameSession(childId, {
       gameId: 'speed-tap',
       domain: 'processing_speed',
       score: Math.round(avgRT),

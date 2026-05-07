@@ -1,4 +1,5 @@
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const API = axios.create({
   // Fallback directly to the IP address shown in your Expo terminal logs
@@ -9,10 +10,18 @@ const API = axios.create({
   },
 });
 
-// Debug interceptor — logs every outgoing request
+// Auth interceptor — attach JWT token to every request
 API.interceptors.request.use(
-  (config) => {
-    console.log(`[API] ${config.method?.toUpperCase()} → ${config.baseURL}${config.url}`);
+  async (config) => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (e) {
+      // silently fail — token might not be set yet
+    }
+    console.log(`[API] ${config.method?.toUpperCase()} -> ${config.baseURL}${config.url}`);
     return config;
   },
   (error) => {
@@ -24,22 +33,19 @@ API.interceptors.request.use(
 // Debug interceptor — logs responses & errors
 API.interceptors.response.use(
   (response) => {
-    console.log(`[API] ✅ ${response.status} from ${response.config.url}`);
+    console.log(`[API] ${response.status} from ${response.config.url}`);
     return response;
   },
   (error) => {
     if (error.code === "ECONNABORTED") {
-      console.error("[API] ⏱ Timeout — backend did not respond within 15s");
+      console.error("[API] Timeout -- backend did not respond within 15s");
     } else if (error.message === "Network Error") {
       console.error(
-        "[API] ❌ Network Error — cannot reach backend at:",
+        "[API] Network Error -- cannot reach backend at:",
         error.config?.baseURL
       );
-      console.error(
-        "    → Check: (1) backend is running, (2) firewall allows port 8000, (3) IP is correct"
-      );
     } else {
-      console.error("[API] ❌ Error:", error.response?.status, error.message);
+      console.error("[API] Error:", error.response?.status, error.message);
     }
     return Promise.reject(error);
   }

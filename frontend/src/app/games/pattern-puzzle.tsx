@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Pressable, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
 import { saveGameSession, normalizeScore, calculateStars } from '../../utils/scoring';
@@ -98,6 +99,13 @@ export default function PatternPuzzle() {
   const [total, setTotal] = useState(0);
   const [startTime, setStartTime] = useState(0);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [childId, setChildId] = useState<number>(0);
+
+  useEffect(() => {
+    AsyncStorage.getItem('selectedChild').then((str) => {
+      if (str) setChildId(JSON.parse(str).child_id);
+    });
+  }, []);
 
   const QUESTIONS_PER_ROUND = 4;
 
@@ -149,7 +157,7 @@ export default function PatternPuzzle() {
     const normalized = normalizeScore(accuracy, elapsed, 3, 3);
     const stars = calculateStars(normalized);
 
-    saveGameSession({
+    saveGameSession(childId, {
       gameId: 'pattern-puzzle',
       domain: 'logic',
       score: correct,

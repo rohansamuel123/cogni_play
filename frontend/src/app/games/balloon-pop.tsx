@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Pressable, Animated, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
 import { saveGameSession, normalizeScore, calculateStars } from '../../utils/scoring';
@@ -33,6 +34,13 @@ export default function BalloonPop() {
   const [startTime, setStartTime] = useState(0);
   const balloonIdRef = useRef(0);
   const spawnIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [childId, setChildId] = useState<number>(0);
+
+  useEffect(() => {
+    AsyncStorage.getItem('selectedChild').then((str) => {
+      if (str) setChildId(JSON.parse(str).child_id);
+    });
+  }, []);
 
   const diff = DIFFICULTY[round];
   const totalForAllRounds = DIFFICULTY.reduce((a, d) => a + d.total, 0);
@@ -131,7 +139,7 @@ export default function BalloonPop() {
       const normalized = normalizeScore(accuracy, elapsed, 3, 3);
       const stars = calculateStars(normalized);
 
-      saveGameSession({
+      saveGameSession(childId, {
         gameId: 'balloon-pop',
         domain: 'attention',
         score: hits,

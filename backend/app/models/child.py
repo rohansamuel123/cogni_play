@@ -16,3 +16,4 @@ class Child(Base):
 
     # Relationships
     parent = relationship("User", back_populates="children")
+    game_sessions = relationship("Session", back_populates="child", cascade="all, delete")

@@ -129,6 +129,16 @@ def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 
+@router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
+def delete_me(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Delete the currently authenticated parent account and all associated data."""
+    db.delete(current_user)  # cascades to children, sessions, reports, scores
+    db.commit()
+
+
 # ── Admin / utility ───────────────────────────────────────────────────────────
 
 @router.get("/", response_model=List[UserResponse])

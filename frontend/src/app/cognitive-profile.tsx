@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Pressable } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/Header';
 import CognitiveRadar from '../components/CognitiveRadar';
 import ScoreRing from '../components/ScoreRing';
@@ -11,13 +12,21 @@ export default function CognitiveProfileScreen() {
   const router = useRouter();
   const [profile, setProfile] = useState<CognitiveProfile | null>(null);
   const [sessions, setSessions] = useState<GameSession[]>([]);
+  const [childName, setChildName] = useState('');
 
   useFocusEffect(
     useCallback(() => {
       const load = async () => {
-        const p = await getCognitiveProfile();
+        const selectedStr = await AsyncStorage.getItem('selectedChild');
+        if (!selectedStr) return;
+
+        const child = JSON.parse(selectedStr);
+        setChildName(child.name || '');
+        const childId = child.child_id;
+
+        const p = await getCognitiveProfile(childId);
         setProfile(p);
-        const s = await getGameSessions();
+        const s = await getGameSessions(childId);
         setSessions(s.reverse()); // Most recent first
       };
       load();
@@ -35,7 +44,7 @@ export default function CognitiveProfileScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header title="Cognitive Profile" subtitle="Your child's thinking patterns" />
+      <Header title="Cognitive Profile" subtitle={childName ? `${childName}'s thinking patterns` : "Your child's thinking patterns"} />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
 
         {/* Radar Chart */}
@@ -56,7 +65,7 @@ export default function CognitiveProfileScreen() {
             <Text style={styles.overallDesc}>
               Based on {profile?.totalGamesPlayed || 0} game sessions
             </Text>
-            <Text style={styles.totalStars}>⭐ {profile?.totalStars || 0} Stars Earned</Text>
+            <Text style={styles.totalStars}>Stars Earned: {profile?.totalStars || 0}</Text>
           </View>
         </View>
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Pressable, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
 import { saveGameSession, normalizeScore, calculateStars } from '../../utils/scoring';
@@ -101,6 +102,13 @@ export default function FollowSteps() {
   const [total, setTotal] = useState(0);
   const [startTime, setStartTime] = useState(0);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [childId, setChildId] = useState<number>(0);
+
+  useEffect(() => {
+    AsyncStorage.getItem('selectedChild').then((str) => {
+      if (str) setChildId(JSON.parse(str).child_id);
+    });
+  }, []);
 
   const QUESTIONS_PER_ROUND = 3;
   const DIFF_NAMES = ['Easy', 'Medium', 'Hard'];
@@ -169,14 +177,14 @@ export default function FollowSteps() {
     const normalized = normalizeScore(accuracy, elapsed, 3, 3);
     const stars = calculateStars(normalized);
 
-    saveGameSession({
+    saveGameSession(childId, {
       gameId: 'follow-steps',
-      domain: 'comprehension',
-      score: correct,
-      maxScore: total,
+      domain: 'logic',
+      score: accuracy,
+      maxScore: 100,
       accuracy,
       timeTaken: elapsed,
-      level: 3,
+      level: round + 1,
       stars,
       playedAt: new Date().toISOString(),
     });

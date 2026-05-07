@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Pressable, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
 import { saveGameSession, normalizeScore, calculateStars } from '../../utils/scoring';
@@ -32,6 +33,13 @@ export default function OddOneOut() {
   const [total, setTotal] = useState(0);
   const [startTime, setStartTime] = useState(0);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [childId, setChildId] = useState<number>(0);
+
+  useEffect(() => {
+    AsyncStorage.getItem('selectedChild').then((str) => {
+      if (str) setChildId(JSON.parse(str).child_id);
+    });
+  }, []);
 
   const diff = DIFFICULTY[round];
 
@@ -119,9 +127,9 @@ export default function OddOneOut() {
     const normalized = normalizeScore(accuracy, elapsed, 3, 3);
     const stars = calculateStars(normalized);
 
-    saveGameSession({
+    saveGameSession(childId, {
       gameId: 'odd-one-out',
-      domain: 'attention',
+      domain: 'logic',
       score: correct,
       maxScore: total,
       accuracy,

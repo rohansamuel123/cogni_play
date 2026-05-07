@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Pressable, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
 import { saveGameSession, normalizeScore, calculateStars } from '../../utils/scoring';
@@ -75,6 +76,13 @@ export default function SequenceBuilder() {
   const [total, setTotal] = useState(0);
   const [startTime, setStartTime] = useState(0);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [childId, setChildId] = useState<number>(0);
+
+  useEffect(() => {
+    AsyncStorage.getItem('selectedChild').then((str) => {
+      if (str) setChildId(JSON.parse(str).child_id);
+    });
+  }, []);
 
   const QUESTIONS_PER_ROUND = 3;
   const DIFF_NAMES = ['Easy', 'Medium', 'Hard'];
@@ -127,7 +135,7 @@ export default function SequenceBuilder() {
     const normalized = normalizeScore(accuracy, elapsed, 3, 3);
     const stars = calculateStars(normalized);
 
-    saveGameSession({
+    saveGameSession(childId, {
       gameId: 'sequence-builder',
       domain: 'logic',
       score: correct,
