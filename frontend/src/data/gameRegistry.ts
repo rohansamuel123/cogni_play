@@ -125,6 +125,28 @@ export const GAMES: GameInfo[] = [
     color: '#2979FF',
     instructions: 'Read the instruction and tap the correct shapes in order.',
   },
+  {
+    id: 'story-builder',
+    name: 'Story Builder',
+    emoji: '📖',
+    domain: 'comprehension',
+    order: 9,
+    route: '/games/story-builder',
+    description: 'Build stories by putting events in order!',
+    color: '#2979FF',
+    instructions: 'Tap the cards in the correct sequence to build a story.',
+  },
+  {
+    id: 'color-mixer',
+    name: 'Color Mixer Lab',
+    emoji: '🧪',
+    domain: 'logic',
+    order: 10,
+    route: '/games/color-mixer',
+    description: 'Mix primary colors to discover new ones!',
+    color: '#00BFA5',
+    instructions: 'Combine different colors to see what new colors you can create.',
+  },
 ];
 
 export function getGameById(id: string): GameInfo | undefined {
