@@ -2,11 +2,11 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Pressable, Alert } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GAMES, DOMAIN_LABELS, DOMAIN_COLORS, CognitiveDomain } from '../data/gameRegistry';
 import {
   getCognitiveProfile, getUnlockedGameCount, getBestSession,
   CognitiveProfile, loadSessionsFromBackend, clearChildGameData,
 } from '../utils/scoring';
+import { GAMES, DOMAIN_LABELS, DOMAIN_COLORS, DOMAIN_EMOJI, CognitiveDomain, getGamesByDomain } from '../data/gameRegistry';
 import GameCard from '../components/GameCard';
 import ScoreRing from '../components/ScoreRing';
 import Button from '../components/Button';
@@ -26,8 +26,8 @@ export default function Dashboard() {
   const router = useRouter();
   const [userName, setUserName] = useState('');
   const [profile, setProfile] = useState<CognitiveProfile | null>(null);
-  const [unlockedCount, setUnlockedCount] = useState(1);
   const [gameStars, setGameStars] = useState<Record<string, number>>({});
+  const [expandedDomain, setExpandedDomain] = useState<CognitiveDomain | null>(null);
 
   // Child management
   const [children, setChildren] = useState<ChildProfile[]>([]);
@@ -343,8 +343,8 @@ export default function Dashboard() {
               <Text style={styles.statLabel}>Stars ★</Text>
             </View>
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>{unlockedCount}/{GAMES.length}</Text>
-              <Text style={styles.statLabel}>Unlocked</Text>
+              <Text style={styles.statValue}>{GAMES.length}</Text>
+              <Text style={styles.statLabel}>Total</Text>
             </View>
           </View>
         </View>
@@ -377,33 +377,62 @@ export default function Dashboard() {
           </Pressable>
         </View>
 
-        {/* Journey Map */}
-        <View style={styles.journeySection}>
-          <Text style={styles.sectionTitle}>🗺️ Your Journey</Text>
+        {/* Games grouped by Domain */}
+        <View style={styles.gamesSection}>
+          <Text style={styles.sectionTitle}>🎮 Games</Text>
           <Text style={styles.sectionSubtitle}>
-            Complete games to unlock the next challenge!
+            Pick any game and start playing!
           </Text>
 
-          {GAMES.map((game, index) => {
-            const locked = game.order > unlockedCount;
-            const stars = gameStars[game.id] || 0;
+          {domains.map(domain => {
+            const domainGames = getGamesByDomain(domain);
+            if (domainGames.length === 0) return null;
+
+            const isExpanded = expandedDomain === domain;
+
             return (
-              <View key={game.id}>
-                {index > 0 && (
-                  <View style={styles.connector}>
-                    <View style={[styles.connectorLine, locked && styles.connectorLocked]} />
+              <View key={domain} style={styles.domainGroupContainer}>
+                {/* Domain Group Header — tappable */}
+                <Pressable
+                  onPress={() => setExpandedDomain(isExpanded ? null : domain)}
+                  style={({ pressed }) => [
+                    styles.domainGroupHeader,
+                    { borderLeftColor: DOMAIN_COLORS[domain] },
+                    isExpanded && { backgroundColor: DOMAIN_COLORS[domain] + '10' },
+                    pressed && { opacity: 0.8 },
+                  ]}
+                >
+                  <Text style={styles.domainGroupEmoji}>{DOMAIN_EMOJI[domain]}</Text>
+                  <View style={styles.domainGroupInfo}>
+                    <Text style={[styles.domainGroupTitle, { color: DOMAIN_COLORS[domain] }]}>
+                      {DOMAIN_LABELS[domain]}
+                    </Text>
+                    <Text style={styles.domainGroupCount}>
+                      {domainGames.length} {domainGames.length === 1 ? 'game' : 'games'}
+                    </Text>
                   </View>
-                )}
-                <GameCard
-                  emoji={game.emoji}
-                  name={game.name}
-                  description={game.description}
-                  domainLabel={DOMAIN_LABELS[game.domain]}
-                  domainColor={game.color}
-                  stars={stars}
-                  locked={locked}
-                  onPress={() => handleGamePress(game.route)}
-                />
+                  <Text style={[styles.chevron, { color: DOMAIN_COLORS[domain] }]}>
+                    {isExpanded ? '▲' : '▼'}
+                  </Text>
+                </Pressable>
+
+                {/* Games in this domain — only shown when expanded */}
+                {isExpanded && domainGames.map(game => {
+                  const stars = gameStars[game.id] || 0;
+                  return (
+                    <GameCard
+                      key={game.id}
+                      emoji={game.emoji}
+                      name={game.name}
+                      description={game.description}
+                      domainLabel={DOMAIN_LABELS[game.domain]}
+                      domainColor={game.color}
+                      stars={stars}
+                      locked={false}
+                      onPress={() => handleGamePress(game.route)}
+                    />
+                  );
+                })}
               </View>
             );
           })}
@@ -538,7 +567,7 @@ const styles = StyleSheet.create({
   sectionSubtitle: {
     fontSize: 14,
     color: '#B0A090',
-    marginBottom: 16,
+    marginBottom: 20,
     fontWeight: '500',
   },
   domainRow: {
@@ -584,22 +613,53 @@ const styles = StyleSheet.create({
     color: '#FF7A00',
   },
 
-  // Journey
-  journeySection: {
+  // Games Section (grouped by domain)
+  gamesSection: {
     marginBottom: 8,
   },
-  connector: {
+  domainGroupContainer: {
+    marginBottom: 24,
+  },
+  domainGroupHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
-    height: 28,
+    backgroundColor: '#FFF',
+    borderRadius: 18,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginBottom: 12,
+    borderLeftWidth: 5,
+    shadowColor: '#8B5A2B',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#F5E6D3',
   },
-  connectorLine: {
-    width: 3,
-    height: '100%',
-    backgroundColor: '#FF7A00',
-    borderRadius: 2,
+  domainGroupEmoji: {
+    fontSize: 28,
+    marginRight: 12,
   },
-  connectorLocked: {
-    backgroundColor: '#E0D5C8',
+  domainGroupInfo: {
+    flex: 1,
+  },
+  domainGroupTitle: {
+    fontSize: 18,
+    fontWeight: '900',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  domainGroupCount: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#B0A090',
+    marginTop: 2,
+  },
+  chevron: {
+    fontSize: 16,
+    fontWeight: '800',
+    marginLeft: 8,
   },
 
   // Empty state

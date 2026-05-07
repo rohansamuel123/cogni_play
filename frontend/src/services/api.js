@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const API = axios.create({
   // Fallback directly to the IP address shown in your Expo terminal logs
-  baseURL: process.env.EXPO_PUBLIC_API_URL || "http://172.17.1.238:8000",
+  baseURL: process.env.EXPO_PUBLIC_API_URL || "http://10.246.36.197:8000",
   timeout: 15000, // 15 seconds — prevents infinite hangs
   headers: {
     "Content-Type": "application/json",

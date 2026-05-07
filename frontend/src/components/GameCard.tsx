@@ -17,23 +17,22 @@ export default function GameCard({
 }: GameCardProps) {
   return (
     <Pressable
-      onPress={locked ? undefined : onPress}
+      onPress={onPress}
       style={({ pressed }) => [
         styles.card,
-        locked && styles.cardLocked,
-        pressed && !locked && styles.cardPressed,
+        pressed && styles.cardPressed,
       ]}
     >
       {/* Left: Emoji */}
       <View style={[styles.emojiContainer, { backgroundColor: domainColor + '18' }]}>
-        <Text style={styles.emoji}>{locked ? '🔒' : emoji}</Text>
+        <Text style={styles.emoji}>{emoji}</Text>
       </View>
 
       {/* Center: Info */}
       <View style={styles.info}>
-        <Text style={[styles.name, locked && styles.textLocked]}>{name}</Text>
-        <Text style={[styles.description, locked && styles.textLocked]} numberOfLines={1}>
-          {locked ? 'Complete previous games to unlock' : description}
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.description} numberOfLines={1}>
+          {description}
         </Text>
         <View style={[styles.badge, { backgroundColor: domainColor + '20' }]}>
           <Text style={[styles.badgeText, { color: domainColor }]}>{domainLabel}</Text>
@@ -68,10 +67,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: '#F5E6D3',
   },
-  cardLocked: {
-    opacity: 0.55,
-    backgroundColor: '#F8F4F0',
-  },
+
   cardPressed: {
     transform: [{ scale: 0.97 }],
     shadowOpacity: 0.12,
@@ -113,9 +109,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
-  textLocked: {
-    color: '#B0A090',
-  },
+
   starsContainer: {
     flexDirection: 'row',
     marginLeft: 8,
