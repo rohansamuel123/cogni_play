@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView, Pressable, Alert } fr
 import { useRouter, useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  getCognitiveProfile, getUnlockedGameCount, getBestSession,
+  getCognitiveProfile, getBestSession,
   CognitiveProfile, loadSessionsFromBackend, clearChildGameData,
 } from '../utils/scoring';
 import { GAMES, DOMAIN_LABELS, DOMAIN_COLORS, DOMAIN_EMOJI, CognitiveDomain, getGamesByDomain } from '../data/gameRegistry';
@@ -90,10 +90,6 @@ export default function Dashboard() {
       const p = await getCognitiveProfile(childId);
       setProfile(p);
 
-      // Load unlocked count
-      const count = await getUnlockedGameCount(childId);
-      setUnlockedCount(count);
-
       // Load best stars per game
       const stars: Record<string, number> = {};
       for (const game of GAMES) {
@@ -119,7 +115,6 @@ export default function Dashboard() {
     } else {
       // Reset data when no child selected
       setProfile(null);
-      setUnlockedCount(1);
       setGameStars({});
     }
   }, [selectedChild?.child_id]);
