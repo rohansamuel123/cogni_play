@@ -4,7 +4,7 @@ from .user import User
 from .game import Game
 from .session import Session
 from .report import Report
-from .score import DomainScore, CognitiveHistory
+from .score import CognitiveScore, DomainScore, CognitiveHistory
 from .child import Child
 
 __all__ = [
@@ -13,8 +13,9 @@ __all__ = [
     "Game",
     "Session",
     "Report",
+    "CognitiveScore",
     "DomainScore",
     "CognitiveHistory",
     "Child",
 ]
-
+

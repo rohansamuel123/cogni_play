@@ -203,7 +203,7 @@ export default function StoryBuilder() {
     setupRound(0);
   };
 
-  const handleCardTap = (card: StoryCard & { origIdx: number }, cardIdx: number) => {
+  const handleCardTap = (card: StoryCard & { origIdx: number }) => {
     if (feedback || isProcessing) return;
 
     // Place card in next slot
@@ -221,8 +221,8 @@ export default function StoryBuilder() {
     }
 
     // Fade out the tapped card
-    if (cardAnims[cardIdx]) {
-      Animated.timing(cardAnims[cardIdx], {
+    if (cardAnims[card.origIdx]) {
+      Animated.timing(cardAnims[card.origIdx], {
         toValue: 0,
         duration: 200,
         useNativeDriver: true,
@@ -230,7 +230,7 @@ export default function StoryBuilder() {
     }
 
     // Remove from available cards
-    const newShuffled = shuffledCards.filter((_, i) => i !== cardIdx);
+    const newShuffled = shuffledCards.filter((availableCard) => availableCard.origIdx !== card.origIdx);
     setShuffledCards(newShuffled);
 
     // Check if all cards placed
@@ -382,10 +382,10 @@ export default function StoryBuilder() {
 
             {/* Available cards to tap */}
             <View style={styles.availableCards}>
-              {shuffledCards.map((card, i) => (
+              {shuffledCards.map((card) => (
                 <Pressable
-                  key={`${card.origIdx}-${i}`}
-                  onPress={() => handleCardTap(card, i)}
+                  key={card.origIdx}
+                  onPress={() => handleCardTap(card)}
                   disabled={!!feedback || isProcessing}
                 >
                   <Animated.View
@@ -394,7 +394,7 @@ export default function StoryBuilder() {
                       {
                         width: cardWidth + 10,
                         height: cardWidth + 30,
-                        opacity: cardAnims[i] || 1,
+                        opacity: cardAnims[card.origIdx] || 1,
                       },
                     ]}
                   >

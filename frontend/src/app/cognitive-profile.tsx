@@ -9,6 +9,12 @@ import API from '../services/api';
 import { CognitiveDomain, DOMAIN_LABELS, DOMAIN_COLORS, DOMAIN_EMOJI } from '../data/gameRegistry';
 import { getCognitiveProfile, getGameSessions, CognitiveProfile, GameSession } from '../utils/scoring';
 
+const asList = (value: any): string[] => {
+  if (Array.isArray(value)) return value.map(String);
+  if (value === null || value === undefined || value === '') return [];
+  return [String(value)];
+};
+
 export default function CognitiveProfileScreen() {
   const router = useRouter();
   const [profile, setProfile] = useState<CognitiveProfile | null>(null);
@@ -39,7 +45,11 @@ export default function CognitiveProfileScreen() {
           if (res.data && res.data.length > 0) {
             setReport(res.data[res.data.length - 1]);
           }
-        } catch (e) {}
+        } catch (e: any) {
+          if (e.response?.status !== 404) {
+            console.warn('Could not load AI report:', e.message);
+          }
+        }
       };
       load();
     }, [])
@@ -103,7 +113,7 @@ export default function CognitiveProfileScreen() {
             <View style={styles.reportHeader}>
               <Text style={styles.reportTitle}>🧠 AI Behavioral Analysis</Text>
               <View style={styles.readinessBadge}>
-                <Text style={styles.readinessText}>{report.readiness_level}</Text>
+                <Text style={styles.readinessText}>{report.readiness_label || report.readiness_level}</Text>
               </View>
             </View>
             
@@ -111,21 +121,21 @@ export default function CognitiveProfileScreen() {
 
             <View style={styles.reportSection}>
               <Text style={styles.subSectionTitle}>💡 Strengths</Text>
-              {report.strengths.map((s: string, i: number) => (
+              {asList(report.strengths).map((s: string, i: number) => (
                 <Text key={i} style={styles.bulletItem}>• {s}</Text>
               ))}
             </View>
 
             <View style={styles.reportSection}>
               <Text style={styles.subSectionTitle}>🔍 Areas to Watch</Text>
-              {report.weaknesses.map((w: string, i: number) => (
+              {asList(report.weaknesses).map((w: string, i: number) => (
                 <Text key={i} style={styles.bulletItem}>• {w}</Text>
               ))}
             </View>
 
             <View style={styles.recommendationBox}>
               <Text style={styles.recTitle}>🎯 Parent Recommendations</Text>
-              {report.recommendations.map((r: string, i: number) => (
+              {asList(report.recommendations).map((r: string, i: number) => (
                 <Text key={i} style={styles.recText}>- {r}</Text>
               ))}
             </View>
@@ -133,7 +143,7 @@ export default function CognitiveProfileScreen() {
             <View style={styles.nextGameBox}>
               <Text style={styles.nextGameLabel}>Next Recommended Game:</Text>
               <Text style={styles.nextGameValue}>
-                {report.next_game.replace(/-/g, ' ')} ({report.difficulty_adjustment})
+                {(report.next_game || 'next activity').replace(/-/g, ' ')} ({report.difficulty_adjustment || 'adaptive'})
               </Text>
             </View>
           </View>

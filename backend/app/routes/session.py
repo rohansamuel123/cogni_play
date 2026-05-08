@@ -19,6 +19,7 @@ router = APIRouter(prefix="/sessions", tags=["Sessions"])
 # ── New child-scoped endpoints ────────────────────────────────────────────────
 
 from app.services import score_service
+from app.services.report_service import generate_child_report
 
 @router.post("/child/{child_id}", response_model=GameSessionResponse, status_code=status.HTTP_201_CREATED)
 def create_child_session(
@@ -56,6 +57,13 @@ def create_child_session(
     except Exception as e:
         print(f"Failed to update cognitive profile: {e}")
         # We don't raise an exception here because the session is already saved
+
+    # Keep the reports table populated with the latest OpenClaw interpretation.
+    # If external providers fail, OpenClaw returns a local fallback report.
+    try:
+        generate_child_report(db, child_id, current_user)
+    except Exception as e:
+        print(f"Failed to generate OpenClaw report: {e}")
     
     return new_session
 

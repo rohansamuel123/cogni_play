@@ -43,6 +43,10 @@ python db_migrate.py
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
+Verify the backend before opening the app:
+- On the computer: open `http://127.0.0.1:8000/`
+- On your phone: open `http://<computer-ip>:8000/`
+
 ### 3. Frontend Setup (React Native)
 ```bash
 cd frontend
@@ -53,12 +57,28 @@ npm install
 # Create .env file and set your COMPUTER'S IP ADDRESS
 # EXPO_PUBLIC_API_URL=http://192.168.x.x:8000
 
-# Run Expo
-npx expo start
+# Run Expo with a clean cache
+npx expo start --clear
 ```
 
+Restart Expo after changing `frontend/.env`; Expo only reads `EXPO_PUBLIC_*` values when the dev server starts.
 
-### 4. Stopping the Project
+If `EXPO_PUBLIC_API_URL` is missing, the app will try to derive the backend host from Expo's dev server URL, then fall back to `http://127.0.0.1:8000` for local/web testing.
+
+### 4. One-Click Startup
+Run these from the repository root, not from `frontend/` or `backend/`:
+
+**Git Bash:**
+```bash
+bash startup.sh
+```
+
+**CMD / PowerShell:**
+```cmd
+startup.bat
+```
+
+### 5. Stopping the Project
 If you used the startup scripts, you can stop everything with:
 
 **Git Bash (Recommended):**

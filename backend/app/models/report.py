@@ -15,6 +15,11 @@ class Report(Base):
     weaknesses = Column(JSON)
     recommendations = Column(JSON)
     readiness_level = Column(Integer)
+    readiness_label = Column(String, nullable=True)
+    next_game = Column(String, nullable=True)
+    difficulty_adjustment = Column(String, nullable=True)
+    behavioral_summary = Column(JSON, nullable=True)
+    providers = Column(JSON, nullable=True)
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

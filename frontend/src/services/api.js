@@ -1,16 +1,56 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from "expo-constants";
+
+const API_PORT = "8000";
+
+function getExpoHostIp() {
+  const hostUri =
+    Constants.expoConfig?.hostUri ||
+    Constants.manifest2?.extra?.expoClient?.hostUri ||
+    Constants.manifest?.debuggerHost;
+
+  if (!hostUri) {
+    return null;
+  }
+
+  return hostUri.split(":")[0];
+}
+
+function getApiBaseUrl() {
+  const configuredUrl = process.env.EXPO_PUBLIC_API_URL?.trim();
+  if (configuredUrl) {
+    return configuredUrl.replace(/\/$/, "");
+  }
+
+  const expoHostIp = getExpoHostIp();
+  if (expoHostIp) {
+    return `http://${expoHostIp}:${API_PORT}`;
+  }
+
+  return `http://127.0.0.1:${API_PORT}`;
+}
+
+const API_BASE_URL = getApiBaseUrl();
+
+console.log("[API] Base URL:", API_BASE_URL);
 
 const API = axios.create({
-  // Fallback directly to the IP address shown in your Expo terminal logs
-  baseURL: process.env.EXPO_PUBLIC_API_URL || "http://10.246.36.197:8000",
-  timeout: 15000, // 15 seconds — prevents infinite hangs
+  baseURL: API_BASE_URL,
+  timeout: 15000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Auth interceptor — attach JWT token to every request
+function getRequestUrl(config) {
+  try {
+    return API.getUri(config);
+  } catch {
+    return `${config?.baseURL || ""}${config?.url || ""}`;
+  }
+}
+
 API.interceptors.request.use(
   async (config) => {
     try {
@@ -18,10 +58,10 @@ API.interceptors.request.use(
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
-    } catch (e) {
-      // silently fail — token might not be set yet
+    } catch {
+      // Token may not be set yet.
     }
-    console.log(`[API] ${config.method?.toUpperCase()} -> ${config.baseURL}${config.url}`);
+    console.log(`[API] ${config.method?.toUpperCase()} -> ${getRequestUrl(config)}`);
     return config;
   },
   (error) => {
@@ -30,22 +70,28 @@ API.interceptors.request.use(
   }
 );
 
-// Debug interceptor — logs responses & errors
 API.interceptors.response.use(
   (response) => {
-    console.log(`[API] ${response.status} from ${response.config.url}`);
+    console.log(`[API] ${response.status} from ${getRequestUrl(response.config)}`);
     return response;
   },
   (error) => {
+    const requestUrl = getRequestUrl(error.config);
+
     if (error.code === "ECONNABORTED") {
-      console.error("[API] Timeout -- backend did not respond within 15s");
+      console.error(`[API] Timeout after 15s: ${requestUrl}`);
     } else if (error.message === "Network Error") {
       console.error(
-        "[API] Network Error -- cannot reach backend at:",
-        error.config?.baseURL
+        `[API] Network Error: cannot reach ${requestUrl}. ` +
+          "Confirm FastAPI is running on 0.0.0.0:8000 and the phone can open the backend URL."
+      );
+    } else if (error.response) {
+      console.error(
+        `[API] HTTP ${error.response.status} from ${requestUrl}:`,
+        error.response.data || error.message
       );
     } else {
-      console.error("[API] Error:", error.response?.status, error.message);
+      console.error(`[API] Request failed for ${requestUrl}:`, error.message);
     }
     return Promise.reject(error);
   }

@@ -33,6 +33,7 @@ app.include_router(game.router)
 app.include_router(score.router)
 app.include_router(session.router)
 app.include_router(report.router)
+app.include_router(report.singular_router)
 app.include_router(child.router)
 
 @app.get("/", tags=["Health"])

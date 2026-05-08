@@ -1,7 +1,19 @@
 from sqlalchemy.orm import Session
 from app.models.session import Session as GameSession
-from app.models.score import DomainScore, CognitiveHistory
+from app.models.score import CognitiveScore, DomainScore, CognitiveHistory
 from typing import Dict, List
+
+def normalize_session_score(session: GameSession) -> int:
+    """Normalize raw gameplay metrics into a deterministic 0-100 score."""
+    accuracy = min(100.0, float(session.accuracy or 0))
+    level = float(session.level or 1)
+    max_level = 3.0
+    time_taken = float(session.time_taken or 60)
+
+    level_score = min(100.0, (level / max_level) * 100)
+    speed_score = max(0.0, 100 - (time_taken / 60) * 100)
+
+    return round((accuracy * 0.5) + (level_score * 0.3) + (speed_score * 0.2))
 
 def recalculate_child_scores(db: Session, child_id: int):
     """
@@ -21,8 +33,9 @@ def recalculate_child_scores(db: Session, child_id: int):
     # 2. Find best score per game_key to aggregate domains
     best_per_game: Dict[str, Dict] = {}
     for s in sessions:
-        if s.game_key not in best_per_game or s.score > best_per_game[s.game_key]["score"]:
-            best_per_game[s.game_key] = {"score": s.score, "domain": s.domain}
+        normalized_score = normalize_session_score(s)
+        if s.game_key not in best_per_game or normalized_score > best_per_game[s.game_key]["score"]:
+            best_per_game[s.game_key] = {"score": normalized_score, "domain": s.domain}
 
     # 3. Group by domain
     domain_data: Dict[str, List[float]] = {}
@@ -59,7 +72,39 @@ def recalculate_child_scores(db: Session, child_id: int):
         db.add(history_entry)
 
     db.commit()
+    sync_legacy_cognitive_score(db, child_id)
     return updated_domains
+
+def sync_legacy_cognitive_score(db: Session, child_id: int):
+    """
+    Keep the legacy cognitive_score table populated from deterministic scores.
+    The legacy table originally only had user_id, so we store parent_id there
+    and add child_id for child-scoped score rows.
+    """
+    from app.models.child import Child
+
+    child = db.query(Child).filter(Child.child_id == child_id).first()
+    if not child:
+        return None
+
+    scores = get_aggregated_scores(db, child_id)
+    record = db.query(CognitiveScore).filter(CognitiveScore.child_id == child_id).first()
+
+    if not record:
+        record = CognitiveScore(user_id=child.parent_id, child_id=child_id)
+        db.add(record)
+    else:
+        record.user_id = child.parent_id
+
+    record.memory_score = round(scores["memory_score"])
+    record.attention_score = round(scores["attention_score"])
+    record.logic_score = round(scores["logic_score"])
+    record.comprehension_score = round(scores["comprehension_score"])
+    record.processing_speed_score = scores["processing_speed_score"]
+
+    db.commit()
+    db.refresh(record)
+    return record
 
 def get_aggregated_scores(db: Session, child_id: int) -> Dict[str, float]:
     """
