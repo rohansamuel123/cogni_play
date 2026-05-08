@@ -402,3 +402,151 @@ INFO:     172.17.1.173:51815 - "OPTIONS /users/google HTTP/1.1" 200 OK
 INFO:     172.17.1.173:51815 - "POST /users/google HTTP/1.1" 200 OK
 INFO:     172.17.1.173:51815 - "GET /children/ HTTP/1.1" 200 OK
 INFO:     172.17.1.173:51815 - "GET /sessions/child/5 HTTP/1.1" 200 OK
+INFO:     172.17.1.173:51046 - "OPTIONS /children/ HTTP/1.1" 200 OK
+INFO:     172.17.1.173:51046 - "GET /children/ HTTP/1.1" 200 OK
+INFO:     172.17.1.173:51046 - "OPTIONS /sessions/child/5 HTTP/1.1" 200 OK
+INFO:     172.17.1.173:51046 - "GET /sessions/child/5 HTTP/1.1" 200 OK
+INFO:     172.17.1.173:62270 - "OPTIONS /users/google HTTP/1.1" 200 OK
+INFO:     172.17.1.173:62270 - "POST /users/google HTTP/1.1" 200 OK
+INFO:     172.17.1.173:62270 - "GET /children/ HTTP/1.1" 200 OK
+INFO:     172.17.1.173:59362 - "GET /sessions/child/5 HTTP/1.1" 200 OK
+INFO:     172.17.1.173:63649 - "OPTIONS /reports/child/5 HTTP/1.1" 200 OK
+INFO:     172.17.1.173:63649 - "GET /reports/child/5 HTTP/1.1" 200 OK
+INFO:     172.17.1.173:56988 - "OPTIONS /reports/generate/5 HTTP/1.1" 200 OK
+INFO:     172.17.1.173:56988 - "POST /reports/generate/5 HTTP/1.1" 201 Created
+INFO:     172.17.1.173:60783 - "GET /children/ HTTP/1.1" 200 OK
+WARNING:  StatReload detected changes in 'app\routes\report.py'. Reloading...
+ INFO:     172.17.1.173:55340 - "GET /sessions/child/5 HTTP/1.1" 200 OK
+INFO:     172.17.1.173:50191 - "GET /children/ HTTP/1.1" 200 OK
+INFO:     172.17.1.173:63717 - "GET /reports/child/5 HTTP/1.1" 200 OK
+INFO:     172.17.1.173:51750 - "OPTIONS /children/ HTTP/1.1" 200 OK
+INFO:     172.17.1.173:51750 - "GET /children/ HTTP/1.1" 200 OK
+--- Startup at Fri 05/08/2026 19:01:33.88 --- 
+INFO:     Will watch for changes in these directories: ['D:\\projects\\intelliSight\\backend']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [2460] using StatReload
+Process SpawnProcess-1:
+Traceback (most recent call last):
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\server.py", line 75, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\_compat.py", line 60, in asyncio_run
+    return loop.run_until_complete(main)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\server.py", line 79, in serve
+    await self._serve(sockets)
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\server.py", line 86, in _serve
+    config.load()
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\config.py", line 449, in load
+    self.loaded_app = import_from_string(self.app)
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\importer.py", line 22, in import_from_string
+    raise exc from None
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "D:\projects\intelliSight\backend\app\main.py", line 12, in <module>
+    from app.routes import report
+  File "D:\projects\intelliSight\backend\app\routes\report.py", line 9, in <module>
+    from app.services.pdf_service import generate_report_pdf
+  File "D:\projects\intelliSight\backend\app\services\pdf_service.py", line 4, in <module>
+    from fpdf import FPDF
+ModuleNotFoundError: No module named 'fpdf'
+--- Startup at Fri 05/08/2026 19:10:23.04 --- 
+INFO:     Will watch for changes in these directories: ['D:\\projects\\intelliSight\\backend']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [36192] using StatReload
+Process SpawnProcess-1:
+Traceback (most recent call last):
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\server.py", line 75, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\_compat.py", line 60, in asyncio_run
+    return loop.run_until_complete(main)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\server.py", line 79, in serve
+    await self._serve(sockets)
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\server.py", line 86, in _serve
+    config.load()
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\config.py", line 449, in load
+    self.loaded_app = import_from_string(self.app)
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\importer.py", line 22, in import_from_string
+    raise exc from None
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "D:\projects\intelliSight\backend\app\main.py", line 12, in <module>
+    from app.routes import report
+  File "D:\projects\intelliSight\backend\app\routes\report.py", line 9, in <module>
+    from app.services.pdf_service import generate_report_pdf
+  File "D:\projects\intelliSight\backend\app\services\pdf_service.py", line 4, in <module>
+    from fpdf import FPDF
+ModuleNotFoundError: No module named 'fpdf'
+--- Startup at Fri 05/08/2026 19:16:42.98 --- 
+INFO:     Will watch for changes in these directories: ['D:\\projects\\intelliSight\\backend']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [33972] using StatReload
+Process SpawnProcess-1:
+Traceback (most recent call last):
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\server.py", line 75, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\_compat.py", line 60, in asyncio_run
+    return loop.run_until_complete(main)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\server.py", line 79, in serve
+    await self._serve(sockets)
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\server.py", line 86, in _serve
+    config.load()
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\config.py", line 449, in load
+    self.loaded_app = import_from_string(self.app)
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\importer.py", line 22, in import_from_string
+    raise exc from None
+  File "D:\projects\intelliSight\backend\venv\lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "D:\projects\intelliSight\backend\app\main.py", line 12, in <module>
+    from app.routes import report
+  File "D:\projects\intelliSight\backend\app\routes\report.py", line 9, in <module>
+    from app.services.pdf_service import generate_report_pdf
+  File "D:\projects\intelliSight\backend\app\services\pdf_service.py", line 4, in <module>
+    from fpdf import FPDF
+ModuleNotFoundError: No module named 'fpdf'
